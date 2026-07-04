@@ -1,0 +1,134 @@
+package services
+
+import (
+	"errors"
+	"goregister/domain"
+	"goregister/dto"
+	"time"
+)
+
+type EventsService struct {
+	events []*domain.EventRegister
+}
+
+func NewEventsService() *EventsService {
+	r, _ := domain.NewEventRegister(
+		"123",
+		time.Now(),
+		"Test",
+		"gb")
+
+	e1, _ := domain.NewEventRegisterEntry(
+		"123",
+		"Person 1",
+		"+27...",
+		"ND...",
+		map[string]int{
+			"Rhino card":   2,
+			"(Cash) Adult": 1,
+		},
+		7000,
+		true,
+		time.Now())
+
+	e2, _ := domain.NewEventRegisterEntry(
+		"456",
+		"Person 2",
+		"+27...",
+		"NP...",
+		map[string]int{
+			"Rhino card":          1,
+			"(Cash) Adult":        2,
+			"(Cash) Child > 3yrs": 1,
+		},
+		14000,
+		true,
+		time.Now())
+
+	r.AddEntry(e1)
+	r.AddEntry(e2)
+
+	return &EventsService{
+		events: []*domain.EventRegister{r},
+	}
+}
+
+func (s *EventsService) GetEvents() []*domain.EventRegister {
+	return s.events
+}
+
+func (s *EventsService) GetEvent(id string) *domain.EventRegister {
+	for _, e := range s.GetEvents() {
+		if e.IdempotencyId == id {
+			return e
+		}
+	}
+
+	return nil
+}
+
+func (s *EventsService) AddEvent(newEvent dto.AddEventDto) (*domain.EventRegister, error) {
+	for _, e := range s.GetEvents() {
+		if e.IdempotencyId == newEvent.IdempotencyId {
+			return e, nil
+		}
+	}
+
+	e, err := domain.NewEventRegister(
+		newEvent.IdempotencyId,
+		newEvent.Date,
+		newEvent.Title,
+		newEvent.OrganiserId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	s.events = append(s.events, e)
+
+	return e, nil
+}
+
+func (s *EventsService) UpdateEvent(newEvent dto.AddEventDto) error {
+	e := s.GetEvent(newEvent.IdempotencyId)
+	if e == nil {
+		return errors.New("Event not found")
+	}
+
+	e.Date = newEvent.Date
+	e.Title = newEvent.Title
+	e.OrganiserId = newEvent.OrganiserId
+
+	return nil
+}
+
+func (s *EventsService) AddRegisterEntry(newEntry dto.AddRegisterEntry) error {
+	e := s.GetEvent(newEntry.EventId)
+	if e == nil {
+		return errors.New("Event not found")
+	}
+
+	for _, entry := range e.Entries {
+		if entry.IdempotencyId == newEntry.IdempotencyId {
+			return nil
+		}
+	}
+
+	ne, err := domain.NewEventRegisterEntry(
+		newEntry.IdempotencyId,
+		newEntry.Name,
+		newEntry.ContactNumber,
+		newEntry.VehicleRegistration,
+		newEntry.EntrantCountByPaymentType,
+		0,
+		newEntry.IsConditionsAccepted,
+		time.Now())
+
+	if err != nil {
+		return err
+	}
+
+	e.Entries = append(e.Entries, ne)
+
+	return nil
+}

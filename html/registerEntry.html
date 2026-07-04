@@ -1,0 +1,19 @@
+{{define "content"}}
+<h1>Your details</h1>
+<form action="/api/registers" method="POST">
+    <input type="hidden" value="{{.EventId}}" name="eventId">
+    <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
+    <input type="hidden" value="{{.IsUpdate}}" name="isUpdate">
+    <label>Name</label><br />
+    <input type="text" name="name" value="{{.Entry.PersonName}}"><br />
+    <label>Phone</label><br />
+    <input type="text" name="contact" value="{{.Entry.PersonContactNumber}}"><br />
+    <label>Vehicle registration</label><br />
+    <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />
+    {{range .PaymentTypes}}
+        <label>{{.}}</label><br />
+        <input type="text" name="payment({{.}})"><br /> 
+    {{end}}
+    <button type="submit">Submit</button>
+</form>
+{{end}}

@@ -1,0 +1,20 @@
+{{define "content"}}
+<h1>Event details</h1>
+<form action="/api/events" method="POST">
+    <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
+    <input type="hidden" value="{{.IsUpdate}}" name="isUpdate">
+    <label>Date (yyyy-mm-dd)</label><br />
+    <input type="text" name="date" value="{{.Date}}"><br />
+    <label>Time (24 hour, e.g. 08:00, 13:00, etc.)</label><br />
+    <input type="text" name="time" value="{{.Time}}"><br />
+    <label>Title</label><br />
+    <input type="text" name="title" value="{{.Title}}"><br />
+    <label>Organiser</label><br />
+    <select name="organiserId" id="organiserId">
+        {{range .Users}}
+            <option value="{{.Id}}" {{if eq .Id $.CurrentUserId}}selected{{end}}>{{.Name}}</option>
+        {{end}}
+    </select><br />
+    <button type="submit">Submit</button>
+</form>
+{{end}}

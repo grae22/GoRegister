@@ -1,0 +1,30 @@
+{{define "content"}}
+{{$data := .}}
+<h1>{{.Event.Title}}</h1>
+<p>
+    Date & Time: <b>{{.Event.Date.Format "2006-01-02 15h04"}}</b><br />
+    Organiser: <b>{{.Event.OrganiserId}}</b>
+</p>
+<div style="text-align: right;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">Sign</a></div>
+<table>
+    <th>Name</th>
+    <th>Phone</th>
+    <th>Vehicle Reg.</th>
+    {{range .PaymentTypes}}
+        <th>{{.}}</th>
+    {{end}}
+    <th>Paid (R)</th>
+    {{range $i, $e := .Event.Entries}}
+        <tr>
+            <td>{{$e.PersonName}}</td>
+            <td>{{$e.PersonContactNumber}}</td>
+            <td>{{$e.VehicleRegistration}}</td>
+            {{range $t := $data.PaymentTypes}}
+                <td style="text-align: center;">{{index $e.EntrantCountByType $t}}</td>
+            {{end}}
+            <td>{{$e.AmountPaidInC}}</td>
+            <!--<td><a href="/events/{{.IdempotencyId}}">Edit</a></td>-->
+        </tr>
+    {{end}}
+</table>
+{{end}}
