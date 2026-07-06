@@ -93,7 +93,9 @@ func TestNewEventRegister_WhenParamsOk_ThenReturnsEventRegister(t *testing.T) {
 		time.Now(),
 		"title",
 		"oid",
-		map[string]PaymentOption{})
+		map[string]PaymentOption{
+			"cash": {},
+		})
 
 	// Assert.
 	if er == nil {
@@ -163,7 +165,9 @@ func TestAddEntry_WhenDuplicateIdempotencyReceived_ThenEntryIsNotAdded(t *testin
 		"name",
 		"+27...",
 		"ND123",
-		map[string]int{},
+		map[string]int{
+			"cash": 0,
+		},
 		0,
 		true,
 		time.Now())

@@ -10,8 +10,8 @@
     <th>Name</th>
     <th>Phone</th>
     <th>Vehicle Reg.</th>
-    {{range .PaymentTypes}}
-        <th>{{.}}</th>
+    {{range .SortedPaymentOptions}}
+        <th style="text-align: center;">{{.Name}}</th>
     {{end}}
     <th>Paid (R)</th>
     {{range $i, $e := .Event.Entries}}
@@ -19,8 +19,8 @@
             <td>{{$e.PersonName}}</td>
             <td>{{$e.PersonContactNumber}}</td>
             <td>{{$e.VehicleRegistration}}</td>
-            {{range $t := $data.PaymentTypes}}
-                <td style="text-align: center;">{{index $e.EntrantCountByType $t}}</td>
+            {{range $o := $data.SortedPaymentOptions}}
+                <td style="text-align: center;">{{with (index $e.EntrantCountByPaymentTypeId $o.Id)}}{{.}}{{end}}</td>
             {{end}}
             <td>{{$e.AmountPaidInC}}</td>
             <!--<td><a href="/events/{{.IdempotencyId}}">Edit</a></td>-->

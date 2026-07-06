@@ -9,8 +9,9 @@ import (
 )
 
 type registerPageData struct {
-	Event        *domain.EventRegister
-	PaymentTypes []string
+	Event                *domain.EventRegister
+	PaymentOptionsById   map[string]domain.PaymentOption
+	SortedPaymentOptions []domain.PaymentOption
 }
 
 func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Request) {
@@ -31,22 +32,30 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+	allPaymentOptions := c.settingsService.GetPaymentOptions()
+
 	data := registerPageData{
-		Event:        event,
-		PaymentTypes: []string{},
+		Event:                event,
+		PaymentOptionsById:   map[string]domain.PaymentOption{},
+		SortedPaymentOptions: []domain.PaymentOption{},
 	}
 
 	for _, e := range event.Entries {
 		for t := range e.EntrantCountByPaymentTypeId {
-			if slices.Contains(data.PaymentTypes, t) {
+			if _, ok := data.PaymentOptionsById[t]; ok {
 				continue
 			}
 
-			data.PaymentTypes = append(data.PaymentTypes, t)
+			data.PaymentOptionsById[t] = allPaymentOptions[t]
+			data.SortedPaymentOptions = append(data.SortedPaymentOptions, allPaymentOptions[t])
 		}
 	}
 
-	slices.Sort(data.PaymentTypes)
+	slices.SortFunc(
+		data.SortedPaymentOptions,
+		func(a domain.PaymentOption, b domain.PaymentOption) int {
+			return strings.Compare(a.Name, b.Name)
+		})
 
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/register.html"))
 	tmpl.ExecuteTemplate(w, "layout", data)

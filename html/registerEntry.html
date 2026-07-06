@@ -10,9 +10,9 @@
     <input type="text" name="contact" value="{{.Entry.PersonContactNumber}}"><br />
     <label>Vehicle registration</label><br />
     <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />
-    {{range .PaymentTypes}}
-        <label>{{.Name}} (R{{.DisplayAmountInR}})</label><br />
-        <input type="text" name="payment({{.Id}})"><br /> 
+    {{range .PaymentOptions}}
+        <label>{{.Name}} ({{.DisplayValueInR}})</label><br />
+        <input type="text" name="payment_{{.Id}}"><br /> 
     {{end}}
     <button type="submit">Submit</button>
 </form>

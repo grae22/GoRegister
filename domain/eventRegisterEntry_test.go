@@ -11,9 +11,12 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 	const personName string = "name"
 	const personContactNumber string = "+27123456789"
 	const vehicleRegistration string = "ND123"
-	var entrantCountByType map[string]int = map[string]int{}
 	const amountPaidInC int = 70
 	const isConditionsAccepted bool = true
+
+	var entrantCountByType map[string]int = map[string]int{
+		"cash": 0,
+	}
 
 	// Act.
 	_, errIdempotency := NewEventRegisterEntry(
@@ -122,9 +125,12 @@ func TestNewEventRegisterEntry_WhenParamsOk_ThenObjectReturned(t *testing.T) {
 	const personName string = "name"
 	const personContactNumber string = "+27123456789"
 	const vehicleRegistration string = "ND123"
-	var entrantCountByType map[string]int = map[string]int{}
 	const amountPaidInC int = 70
 	const isConditionsAccepted bool = true
+
+	var entrantCountByType map[string]int = map[string]int{
+		"cash": 0,
+	}
 
 	// Act.
 	e, _ := NewEventRegisterEntry(

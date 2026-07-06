@@ -5,6 +5,8 @@ import (
 	"goregister/dto"
 	"goregister/services"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type RegistersApi struct {
@@ -53,7 +55,7 @@ func handleAddRegisterEntry(
 		Name:                      r.FormValue("name"),
 		ContactNumber:             r.FormValue("contact"),
 		VehicleRegistration:       r.FormValue("vehicleReg"),
-		EntrantCountByPaymentType: map[string]int{},
+		EntrantCountByPaymentType: getEntrantCounts(r),
 	}
 
 	var err error
@@ -74,4 +76,31 @@ func handleAddRegisterEntry(
 		r,
 		"/registers/"+e.EventId,
 		http.StatusSeeOther)
+}
+
+func getEntrantCounts(r *http.Request) map[string]int {
+	const paymentPrefix string = "payment_"
+
+	countsByPaymentTypeId := map[string]int{}
+
+	for k, v := range r.Form {
+		if !strings.HasPrefix(k, paymentPrefix) {
+			continue
+		}
+
+		paymentTypeId := k[len(paymentPrefix):]
+
+		if len(v) == 0 {
+			continue
+		}
+
+		entrantCount, err := strconv.Atoi(v[0])
+		if err != nil {
+			continue
+		}
+
+		countsByPaymentTypeId[paymentTypeId] = entrantCount
+	}
+
+	return countsByPaymentTypeId
 }

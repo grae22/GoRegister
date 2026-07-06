@@ -45,8 +45,8 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 		"+27...",
 		"ND...",
 		map[string]int{
-			"Rhino card":   2,
-			"(Cash) Adult": 1,
+			"rhino": 2,
+			"adult": 1,
 		},
 		7000,
 		true,
@@ -58,9 +58,9 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 		"+27...",
 		"NP...",
 		map[string]int{
-			"Rhino card":          1,
-			"(Cash) Adult":        2,
-			"(Cash) Child > 3yrs": 1,
+			"rhino": 1,
+			"adult": 2,
+			"child": 1,
 		},
 		14000,
 		true,

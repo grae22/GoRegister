@@ -3,7 +3,6 @@ package web
 import (
 	"goregister/domain"
 	"html/template"
-	"maps"
 	"net/http"
 	"slices"
 	"strings"
@@ -12,11 +11,11 @@ import (
 )
 
 type addRegisterEntryPageData struct {
-	EventId       string
-	IdempotencyId string
-	IsUpdate      bool
-	Entry         domain.EventRegisterEntry
-	PaymentTypes  []domain.PaymentOption
+	EventId        string
+	IdempotencyId  string
+	IsUpdate       bool
+	Entry          domain.EventRegisterEntry
+	PaymentOptions []domain.PaymentOption
 }
 
 func (c *RegistersController) HandleAddRegisterEntry(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +27,7 @@ func (c *RegistersController) HandleAddRegisterEntry(w http.ResponseWriter, r *h
 	paymentOptionsById := c.settingsService.GetPaymentOptions()
 	paymentOptions := []domain.PaymentOption{}
 
-	for po := range maps.Values(paymentOptionsById) {
+	for _, po := range paymentOptionsById {
 		paymentOptions = append(paymentOptions, po)
 	}
 
@@ -39,10 +38,10 @@ func (c *RegistersController) HandleAddRegisterEntry(w http.ResponseWriter, r *h
 		})
 
 	data := addRegisterEntryPageData{
-		EventId:       r.URL.Query().Get("eventId"),
-		IdempotencyId: uuid.New().String(),
-		Entry:         domain.EventRegisterEntry{},
-		PaymentTypes:  paymentOptions,
+		EventId:        r.URL.Query().Get("eventId"),
+		IdempotencyId:  uuid.New().String(),
+		Entry:          domain.EventRegisterEntry{},
+		PaymentOptions: paymentOptions,
 	}
 
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/registerEntry.html"))
