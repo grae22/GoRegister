@@ -9,7 +9,14 @@ import (
 )
 
 func main() {
-	eventsService := services.NewEventsService()
+	settingsService := services.NewSettingsService()
+
+	eventsService, err := services.NewEventsService(settingsService)
+	if err != nil {
+		log.Fatalf("Failed to create events service: %v", err)
+		return
+	}
+
 	usersService := services.NewUsersService()
 
 	eventsController, err := web.NewEventsController(eventsService, usersService)
@@ -24,7 +31,10 @@ func main() {
 		return
 	}
 
-	registersController, err := web.NewRegistersController(eventsService, usersService)
+	registersController, err := web.NewRegistersController(
+		eventsService,
+		settingsService,
+		usersService)
 	if err != nil {
 		log.Fatalf("Failed to create registers controller: %v", err)
 		return

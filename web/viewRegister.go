@@ -37,7 +37,7 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 	}
 
 	for _, e := range event.Entries {
-		for t := range e.EntrantCountByType {
+		for t := range e.EntrantCountByPaymentTypeId {
 			if slices.Contains(data.PaymentTypes, t) {
 				continue
 			}

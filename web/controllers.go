@@ -6,12 +6,14 @@ import (
 )
 
 type RegistersController struct {
-	eventsService *services.EventsService
-	usersService  *services.UsersService
+	eventsService   *services.EventsService
+	settingsService *services.SettingsService
+	usersService    *services.UsersService
 }
 
 func NewRegistersController(
 	es *services.EventsService,
+	ss *services.SettingsService,
 	us *services.UsersService,
 ) (*RegistersController, error) {
 
@@ -19,13 +21,18 @@ func NewRegistersController(
 		return nil, errors.New("Received nil events service")
 	}
 
+	if ss == nil {
+		return nil, errors.New("Received nil settings service")
+	}
+
 	if us == nil {
 		return nil, errors.New("Received nil users service")
 	}
 
 	return &RegistersController{
-			eventsService: es,
-			usersService:  us,
+			eventsService:   es,
+			settingsService: ss,
+			usersService:    us,
 		},
 		nil
 }

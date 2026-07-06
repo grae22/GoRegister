@@ -8,15 +8,36 @@ import (
 )
 
 type EventsService struct {
-	events []*domain.EventRegister
+	settings *SettingsService
+	events   []*domain.EventRegister
 }
 
-func NewEventsService() *EventsService {
+func NewEventsService(settings *SettingsService) (*EventsService, error) {
+	if settings == nil {
+		return nil, errors.New("Nil settings service")
+	}
+
 	r, _ := domain.NewEventRegister(
 		"123",
 		time.Now(),
 		"Test",
-		"gb")
+		"gb",
+		map[string]domain.PaymentOption{
+			"rhino": {
+				Id:                          "rhino",
+				Name:                        "Rhino card",
+				ValueInC:                    0,
+				DisplayValueInR:             "0",
+				IsEnabledForNewTransactions: true,
+			},
+			"adult": {
+				Id:                          "adult",
+				Name:                        "Adult",
+				ValueInC:                    7000,
+				DisplayValueInR:             "70",
+				IsEnabledForNewTransactions: true,
+			},
+		})
 
 	e1, _ := domain.NewEventRegisterEntry(
 		"123",
@@ -49,8 +70,9 @@ func NewEventsService() *EventsService {
 	r.AddEntry(e2)
 
 	return &EventsService{
-		events: []*domain.EventRegister{r},
-	}
+			events: []*domain.EventRegister{r},
+		},
+		nil
 }
 
 func (s *EventsService) GetEvents() []*domain.EventRegister {
@@ -78,7 +100,8 @@ func (s *EventsService) AddEvent(newEvent dto.AddEventDto) (*domain.EventRegiste
 		newEvent.IdempotencyId,
 		newEvent.Date,
 		newEvent.Title,
-		newEvent.OrganiserId)
+		newEvent.OrganiserId,
+		s.settings.GetPaymentOptions())
 
 	if err != nil {
 		return nil, err

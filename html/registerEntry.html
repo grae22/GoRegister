@@ -11,8 +11,8 @@
     <label>Vehicle registration</label><br />
     <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />
     {{range .PaymentTypes}}
-        <label>{{.}}</label><br />
-        <input type="text" name="payment({{.}})"><br /> 
+        <label>{{.Name}} (R{{.DisplayAmountInR}})</label><br />
+        <input type="text" name="payment({{.Id}})"><br /> 
     {{end}}
     <button type="submit">Submit</button>
 </form>

@@ -7,14 +7,14 @@ import (
 )
 
 type EventRegisterEntry struct {
-	IdempotencyId        string
-	PersonName           string
-	PersonContactNumber  string
-	VehicleRegistration  string
-	EntrantCountByType   map[string]int
-	AmountPaidInC        int
-	IsConditionsAccepted bool
-	Timestamp            time.Time
+	IdempotencyId               string
+	PersonName                  string
+	PersonContactNumber         string
+	VehicleRegistration         string
+	EntrantCountByPaymentTypeId map[string]int
+	AmountPaidInC               int
+	IsConditionsAccepted        bool
+	Timestamp                   time.Time
 }
 
 func NewEventRegisterEntry(
@@ -22,7 +22,7 @@ func NewEventRegisterEntry(
 	personName string,
 	personContactNumber string,
 	vehicleRegistration string,
-	entrantCountByType map[string]int,
+	entrantCountByPaymentTypeId map[string]int,
 	amountPaidInC int,
 	isConditionsAccepted bool,
 	timestamp time.Time,
@@ -44,8 +44,8 @@ func NewEventRegisterEntry(
 		return nil, errors.New("Invalid person contact number")
 	}
 
-	if entrantCountByType == nil {
-		return nil, errors.New("Nil entrant count data")
+	if len(entrantCountByPaymentTypeId) == 0 {
+		return nil, errors.New("No entrant count data")
 	}
 
 	if amountPaidInC < 0 {
@@ -53,14 +53,14 @@ func NewEventRegisterEntry(
 	}
 
 	e := EventRegisterEntry{
-		IdempotencyId:        idempotencyId,
-		PersonName:           personName,
-		PersonContactNumber:  personContactNumber,
-		VehicleRegistration:  vehicleRegistration,
-		EntrantCountByType:   entrantCountByType,
-		AmountPaidInC:        amountPaidInC,
-		IsConditionsAccepted: isConditionsAccepted,
-		Timestamp:            timestamp,
+		IdempotencyId:               idempotencyId,
+		PersonName:                  personName,
+		PersonContactNumber:         personContactNumber,
+		VehicleRegistration:         vehicleRegistration,
+		EntrantCountByPaymentTypeId: entrantCountByPaymentTypeId,
+		AmountPaidInC:               amountPaidInC,
+		IsConditionsAccepted:        isConditionsAccepted,
+		Timestamp:                   timestamp,
 	}
 
 	return &e, nil

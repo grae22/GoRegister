@@ -7,11 +7,12 @@ import (
 )
 
 type EventRegister struct {
-	IdempotencyId string
-	Date          time.Time
-	Title         string
-	OrganiserId   string
-	Entries       []*EventRegisterEntry
+	IdempotencyId      string
+	Date               time.Time
+	Title              string
+	OrganiserId        string
+	PaymentOptionsById map[string]PaymentOption
+	Entries            []*EventRegisterEntry
 }
 
 func NewEventRegister(
@@ -19,6 +20,7 @@ func NewEventRegister(
 	date time.Time,
 	title string,
 	organiserId string,
+	paymentOptionsById map[string]PaymentOption,
 ) (*EventRegister, error) {
 
 	idempotencyId = strings.TrimSpace(idempotencyId)
@@ -37,12 +39,17 @@ func NewEventRegister(
 		return nil, errors.New("Invalid title")
 	}
 
+	if len(paymentOptionsById) == 0 {
+		return nil, errors.New("No payment options supplied")
+	}
+
 	r := EventRegister{
-		IdempotencyId: idempotencyId,
-		Date:          date,
-		Title:         title,
-		OrganiserId:   organiserId,
-		Entries:       []*EventRegisterEntry{},
+		IdempotencyId:      idempotencyId,
+		Date:               date,
+		Title:              title,
+		OrganiserId:        organiserId,
+		Entries:            []*EventRegisterEntry{},
+		PaymentOptionsById: paymentOptionsById,
 	}
 
 	return &r, nil
