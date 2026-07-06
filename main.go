@@ -40,7 +40,10 @@ func main() {
 		return
 	}
 
-	registersApi, err := webapi.NewRegistersApi(eventsService, usersService)
+	registersApi, err := webapi.NewRegistersApi(
+		eventsService,
+		settingsService,
+		usersService)
 	if err != nil {
 		log.Fatalf("Failed to create registers api: %v", err)
 		return

@@ -16,5 +16,6 @@ type AddRegisterEntry struct {
 	ContactNumber             string
 	VehicleRegistration       string
 	EntrantCountByPaymentType map[string]int
+	AmountDueInC              int
 	IsConditionsAccepted      bool
 }

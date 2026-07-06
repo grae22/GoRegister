@@ -12,7 +12,7 @@ type EventRegisterEntry struct {
 	PersonContactNumber         string
 	VehicleRegistration         string
 	EntrantCountByPaymentTypeId map[string]int
-	AmountPaidInC               int
+	AmountDueInC                int
 	IsConditionsAccepted        bool
 	Timestamp                   time.Time
 }
@@ -23,7 +23,7 @@ func NewEventRegisterEntry(
 	personContactNumber string,
 	vehicleRegistration string,
 	entrantCountByPaymentTypeId map[string]int,
-	amountPaidInC int,
+	amountDueInC int,
 	isConditionsAccepted bool,
 	timestamp time.Time,
 ) (*EventRegisterEntry, error) {
@@ -48,7 +48,7 @@ func NewEventRegisterEntry(
 		return nil, errors.New("No entrant count data")
 	}
 
-	if amountPaidInC < 0 {
+	if amountDueInC < 0 {
 		return nil, errors.New("Negative amount paid")
 	}
 
@@ -58,7 +58,7 @@ func NewEventRegisterEntry(
 		PersonContactNumber:         personContactNumber,
 		VehicleRegistration:         vehicleRegistration,
 		EntrantCountByPaymentTypeId: entrantCountByPaymentTypeId,
-		AmountPaidInC:               amountPaidInC,
+		AmountDueInC:                amountDueInC,
 		IsConditionsAccepted:        isConditionsAccepted,
 		Timestamp:                   timestamp,
 	}

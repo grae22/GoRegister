@@ -2,6 +2,8 @@ package webapi
 
 import (
 	"errors"
+	"fmt"
+	"goregister/domain"
 	"goregister/dto"
 	"goregister/services"
 	"net/http"
@@ -10,17 +12,23 @@ import (
 )
 
 type RegistersApi struct {
-	events *services.EventsService
-	users  *services.UsersService
+	events   *services.EventsService
+	settings *services.SettingsService
+	users    *services.UsersService
 }
 
 func NewRegistersApi(
 	events *services.EventsService,
+	settings *services.SettingsService,
 	users *services.UsersService,
 ) (*RegistersApi, error) {
 
 	if events == nil {
 		return nil, errors.New("Received nil events service")
+	}
+
+	if settings == nil {
+		return nil, errors.New("Received nil settings service")
 	}
 
 	if users == nil {
@@ -59,7 +67,15 @@ func handleAddRegisterEntry(
 		IsConditionsAccepted:      r.FormValue("conditions") == "yes",
 	}
 
-	var err error
+	amountDueInC, err := calculateAmountDueInC(
+		api.settings.GetPaymentOptions(),
+		e.EntrantCountByPaymentType)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	e.AmountDueInC = amountDueInC
 
 	if !isUpdate {
 		err = api.events.AddRegisterEntry(e)
@@ -70,7 +86,7 @@ func handleAddRegisterEntry(
 	}
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -106,4 +122,22 @@ func getEntrantCounts(r *http.Request) map[string]int {
 	}
 
 	return countsByPaymentTypeId
+}
+
+func calculateAmountDueInC(
+	paymentOptionsById map[string]domain.PaymentOption,
+	entrantCountsByPaymentId map[string]int,
+) (int, error) {
+	totalInC := 0
+
+	for id, count := range entrantCountsByPaymentId {
+		opt, ok := paymentOptionsById[id]
+		if !ok {
+			return 0, fmt.Errorf("Unknown payment option id: %s", id)
+		}
+
+		totalInC += opt.ValueInC * count
+	}
+
+	return totalInC, nil
 }

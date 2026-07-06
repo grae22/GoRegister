@@ -5,7 +5,7 @@
     Date & Time: <b>{{.Event.Date.Format "2006-01-02 15h04"}}</b><br />
     Organiser: <b>{{.Event.OrganiserId}}</b>
 </p>
-<div style="text-align: right;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">Sign</a></div>
+<div style="text-align: right;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">Sign in</a></div>
 <table>
     <th>Name</th>
     <th>Phone</th>
@@ -13,17 +13,17 @@
     {{range .SortedPaymentOptions}}
         <th style="text-align: center;">{{.Name}}</th>
     {{end}}
-    <th>Paid (R)</th>
+    <th>Due (R)</th>
     {{range $i, $e := .Event.Entries}}
         <tr>
             <td>{{$e.PersonName}}</td>
             <td>{{$e.PersonContactNumber}}</td>
             <td>{{$e.VehicleRegistration}}</td>
             {{range $o := $data.SortedPaymentOptions}}
-                <td style="text-align: center;">{{with (index $e.EntrantCountByPaymentTypeId $o.Id)}}{{.}}{{end}}</td>
+                <td style="text-align: center;">{{with (index $e.EntrantCountByPaymentTypeId $o.Id)}}{{.}}{{else}}-{{end}}</td>
             {{end}}
-            <td>{{$e.AmountPaidInC}}</td>
-            <!--<td><a href="/events/{{.IdempotencyId}}">Edit</a></td>-->
+            <td style="text-align: center;">{{centsToRandsStr $e.AmountDueInC}}</td>
+            <!--<td><a href="/registers/{{$data.Event.IdempotencyId}}/entries/{{$e.IdempotencyId}}">Edit</a></td>-->
         </tr>
     {{end}}
 </table>

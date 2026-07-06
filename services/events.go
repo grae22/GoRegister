@@ -143,7 +143,7 @@ func (s *EventsService) AddRegisterEntry(newEntry dto.AddRegisterEntry) error {
 		newEntry.ContactNumber,
 		newEntry.VehicleRegistration,
 		newEntry.EntrantCountByPaymentType,
-		0,
+		newEntry.AmountDueInC,
 		newEntry.IsConditionsAccepted,
 		time.Now())
 
