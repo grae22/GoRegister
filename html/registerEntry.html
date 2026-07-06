@@ -10,10 +10,22 @@
     <input type="text" name="contact" value="{{.Entry.PersonContactNumber}}"><br />
     <label>Vehicle registration</label><br />
     <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />
+    <div style="border-color: red; border-width: 2px; border-style: dashed;">
+    <span style="color: red;">Enter the NUMBER of entrants per payment category:</span><br /><br />
     {{range .PaymentOptions}}
         <label>{{.Name}} ({{.DisplayValueInR}})</label><br />
         <input type="text" name="payment_{{.Id}}"><br /> 
     {{end}}
-    <button type="submit">Submit</button>
+    </div><br />
+    <input type="checkbox" id="conditions" name="conditions" value="yes">
+    <label>I understand and accept the conditions.</label><br /><br />
+    <button id="submit" type="submit" disabled="{{.Entry.IsConditionsAccepted}}">Submit</button>
 </form>
+<script langauge="javascript">
+    const conditions = document.getElementById('conditions');
+    conditions.addEventListener('change', (e) => {
+        const btn = document.getElementById('submit');
+        btn.disabled = !e.target.checked
+    });
+</script>
 {{end}}

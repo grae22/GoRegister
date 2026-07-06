@@ -11,9 +11,9 @@
     <input type="text" name="title" value="{{.Title}}"><br />
     <label>Organiser</label><br />
     <select name="organiserId" id="organiserId">
-        {{range .Users}}
-            <option value="{{.Id}}" {{if eq .Id $.CurrentUserId}}selected{{end}}>{{.Name}}</option>
-        {{end}}
+    {{range .Users}}
+        <option value="{{.Id}}" {{if eq .Id $.CurrentUserId}}selected{{end}}>{{.Name}}</option>
+    {{end}}
     </select><br />
     <button type="submit">Submit</button>
 </form>

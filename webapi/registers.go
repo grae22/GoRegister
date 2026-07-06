@@ -56,6 +56,7 @@ func handleAddRegisterEntry(
 		ContactNumber:             r.FormValue("contact"),
 		VehicleRegistration:       r.FormValue("vehicleReg"),
 		EntrantCountByPaymentType: getEntrantCounts(r),
+		IsConditionsAccepted:      r.FormValue("conditions") == "yes",
 	}
 
 	var err error
@@ -64,6 +65,8 @@ func handleAddRegisterEntry(
 		err = api.events.AddRegisterEntry(e)
 	} else {
 		//err = api.events.UpdateEvent(e)
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
 	}
 
 	if err != nil {
