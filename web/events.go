@@ -4,6 +4,7 @@ import (
 	"errors"
 	"goregister/domain"
 	"goregister/services"
+	"goregister/utils"
 	"html/template"
 	"net/http"
 	"slices"
@@ -18,7 +19,8 @@ type EventsController struct {
 }
 
 type eventsPageData struct {
-	Events []*domain.EventRegister
+	CurrentUser *domain.User
+	Events      []*domain.EventRegister
 }
 
 type eventDetailsPageData struct {
@@ -53,10 +55,17 @@ func NewEventsController(
 }
 
 func (c *EventsController) HandleEvents(w http.ResponseWriter, r *http.Request) {
+	requestCtx := utils.NewRequestContext(c.usersService, r)
+
+	if requestCtx.User == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	isGetAllEvents, isGetOneEvent, eventId := interpretGetEventUrl(r)
 
 	if isGetAllEvents {
-		handleGetAllEvents(w, c)
+		handleGetAllEvents(w, c, requestCtx)
 	} else if isGetOneEvent {
 		handleGetOneEvent(w, c, eventId)
 	} else {
@@ -65,11 +74,17 @@ func (c *EventsController) HandleEvents(w http.ResponseWriter, r *http.Request) 
 }
 
 func (c *EventsController) HandleAddEvent(w http.ResponseWriter, r *http.Request) {
+	requestCtx := utils.NewRequestContext(c.usersService, r)
+
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
 		IdempotencyId: uuid.New().String(),
 		Users:         c.usersService.GetUsers(),
+	}
+
+	if requestCtx.User != nil {
+		data.CurrentUserId = requestCtx.User.Id
 	}
 
 	tmpl.ExecuteTemplate(w, "layout", data)
@@ -91,11 +106,13 @@ func interpretGetEventUrl(r *http.Request) (isGetAllEvents bool, isGetOneEvent b
 func handleGetAllEvents(
 	w http.ResponseWriter,
 	c *EventsController,
+	ctx *utils.RequestCtx,
 ) {
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/events.html"))
 
 	data := eventsPageData{
-		Events: c.eventsService.GetEvents(),
+		CurrentUser: ctx.User,
+		Events:      c.eventsService.GetEvents(),
 	}
 
 	slices.SortFunc(

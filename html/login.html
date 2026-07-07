@@ -1,0 +1,11 @@
+{{define "content"}}
+<h1>User login</h1>
+<form action="/api/usersession" method="POST">
+    <label>Username</label>
+    <input type="text" name="username" required><br />
+    <label>Password</label>
+    <input type="password" name="password" required><br />
+    {{if .HasFailed}}<span style="color: red;">Login failed, please check your credentials.</span><br /><br />{{end}}
+    <button type="submit">Login</button>
+</form>
+{{end}}

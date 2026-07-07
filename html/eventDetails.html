@@ -4,13 +4,13 @@
     <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
     <input type="hidden" value="{{.IsUpdate}}" name="isUpdate">
     <label>Date (yyyy-mm-dd)</label><br />
-    <input type="text" name="date" value="{{.Date}}"><br />
+    <input type="date" name="date" value="{{.Date}}" required><br />
     <label>Time (24 hour, e.g. 08:00, 13:00, etc.)</label><br />
-    <input type="text" name="time" value="{{.Time}}"><br />
+    <input type="text" name="time" value="{{.Time}}" required><br />
     <label>Title</label><br />
-    <input type="text" name="title" value="{{.Title}}"><br />
+    <input type="text" name="title" value="{{.Title}}" required><br />
     <label>Organiser</label><br />
-    <select name="organiserId" id="organiserId">
+    <select name="organiserId" id="organiserId" required>
     {{range .Users}}
         <option value="{{.Id}}" {{if eq .Id $.CurrentUserId}}selected{{end}}>{{.Name}}</option>
     {{end}}

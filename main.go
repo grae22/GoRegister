@@ -19,6 +19,18 @@ func main() {
 
 	usersService := services.NewUsersService()
 
+	usersController, err := web.NewUsersController(usersService)
+	if err != nil {
+		log.Fatalf("Failed to create users controller: %v", err)
+		return
+	}
+
+	userSessionApi, err := webapi.NewUserSessionApi(usersService)
+	if err != nil {
+		log.Fatalf("Failed to create user session api: %v", err)
+		return
+	}
+
 	eventsController, err := web.NewEventsController(eventsService, usersService)
 	if err != nil {
 		log.Fatalf("Failed to create events controller: %v", err)
@@ -48,6 +60,9 @@ func main() {
 		log.Fatalf("Failed to create registers api: %v", err)
 		return
 	}
+
+	http.HandleFunc("/login", usersController.HandleLoginPage)
+	http.HandleFunc("/api/usersession", userSessionApi.Handle)
 
 	http.HandleFunc("/events/", eventsController.HandleEvents)
 	http.HandleFunc("/addEvent", eventsController.HandleAddEvent)

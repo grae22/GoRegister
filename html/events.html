@@ -1,5 +1,6 @@
 {{define "content"}}
 <h1>Events</h1>
+<div style="text-align: right;">{{if ne .CurrentUser nil}}Logged in as {{.CurrentUser.Name}}{{else}}~{{end}}</div>
 <div style="text-align: right;"><a href="/addEvent">Add Event</a></div>
 <table>
     <th>Date & Time</th>

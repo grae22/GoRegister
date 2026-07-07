@@ -11,7 +11,8 @@
             "mode": "debug",
             "debugAdapter": "dlv-dap",
             "host": "127.0.0.1",
-            "program": "${workspaceFolder}"
+            "program": "${workspaceFolder}",
+            "console": "integratedTerminal"
         }
     ]
 }

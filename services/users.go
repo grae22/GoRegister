@@ -16,3 +16,22 @@ func (s *UsersService) GetUsers() []domain.User {
 
 	return []domain.User{*u1, *u2, *u3}
 }
+
+func (s *UsersService) GetUserById(id string) (domain.User, bool) {
+	for _, u := range s.GetUsers() {
+		if u.Id == id {
+			return u, true
+		}
+	}
+
+	return domain.User{}, false
+}
+
+func (s *UsersService) ValidatePassword(username string, password string) bool {
+	u, ok := s.GetUserById(username)
+	if !ok {
+		return false
+	}
+
+	return u.VerifyPassword(password)
+}
