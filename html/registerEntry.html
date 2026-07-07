@@ -20,6 +20,7 @@
     <input type="checkbox" id="conditions" name="conditions" value="yes">
     <label>I understand and accept the conditions.</label><br /><br />
     <button id="submit" type="submit" disabled="{{.Entry.IsConditionsAccepted}}">Submit</button>
+    <button onclick="history.back()">Cancel</button>
 </form>
 <script langauge="javascript">
     const conditions = document.getElementById('conditions');

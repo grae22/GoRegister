@@ -3,10 +3,13 @@ package services
 import "goregister/domain"
 
 type SettingsService struct {
+	BaseUrl string
 }
 
 func NewSettingsService() *SettingsService {
-	return &SettingsService{}
+	return &SettingsService{
+		BaseUrl: "http://localhost:10222",
+	}
 }
 
 func (s *SettingsService) GetPaymentOptions() map[string]domain.PaymentOption {

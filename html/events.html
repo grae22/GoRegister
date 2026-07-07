@@ -4,7 +4,7 @@
 <div style="text-align: right;"><a href="/addEvent">Add Event</a></div>
 <table>
     <th>Date & Time</th>
-    <th>Location</th>
+    <th>Title</th>
     <th>Organiser</th>
     {{range .Events}}
         <tr>
@@ -12,7 +12,7 @@
             <td>{{.Title}}</td>
             <td>{{index $data.NameByUserId .OrganiserId}}</td>
             <td><a href="/events/{{.IdempotencyId}}">Edit</a></td>
-            <td><a href="/registers/{{.IdempotencyId}}">Register</a></td>
+            <td><a href="/registers/{{.IdempotencyId}}">View Register</a></td>
         </tr>
     {{end}}
 </table>
