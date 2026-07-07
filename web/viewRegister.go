@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"goregister/domain"
+	"goregister/utils"
 	"html/template"
 	"net/http"
 	"slices"
@@ -11,6 +12,7 @@ import (
 )
 
 type registerPageData struct {
+	CurrentUser          *domain.User
 	Event                *domain.EventRegister
 	PaymentOptionsById   map[string]domain.PaymentOption
 	SortedPaymentOptions []domain.PaymentOption
@@ -21,6 +23,8 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+
+	requestCtx := utils.NewRequestContext(c.usersService, r)
 
 	eventId := getEventIdFromUrl(r)
 	if len(eventId) == 0 {
@@ -37,6 +41,7 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 	allPaymentOptions := c.settingsService.GetPaymentOptions()
 
 	data := registerPageData{
+		CurrentUser:          requestCtx.User,
 		Event:                event,
 		PaymentOptionsById:   map[string]domain.PaymentOption{},
 		SortedPaymentOptions: []domain.PaymentOption{},

@@ -2,6 +2,7 @@ package web
 
 import (
 	"goregister/domain"
+	"goregister/utils"
 	"html/template"
 	"net/http"
 	"slices"
@@ -11,6 +12,7 @@ import (
 )
 
 type addRegisterEntryPageData struct {
+	CurrentUser    *domain.User
 	EventId        string
 	IdempotencyId  string
 	IsUpdate       bool
@@ -23,6 +25,8 @@ func (c *RegistersController) HandleAddRegisterEntry(w http.ResponseWriter, r *h
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+
+	requestCtx := utils.NewRequestContext(c.usersService, r)
 
 	paymentOptionsById := c.settingsService.GetPaymentOptions()
 	paymentOptions := []domain.PaymentOption{}
@@ -38,10 +42,15 @@ func (c *RegistersController) HandleAddRegisterEntry(w http.ResponseWriter, r *h
 		})
 
 	data := addRegisterEntryPageData{
+		CurrentUser:    requestCtx.User,
 		EventId:        r.URL.Query().Get("eventId"),
 		IdempotencyId:  uuid.New().String(),
 		Entry:          domain.EventRegisterEntry{},
 		PaymentOptions: paymentOptions,
+	}
+
+	if requestCtx.User != nil {
+		data.Entry.PersonName = requestCtx.User.Name
 	}
 
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/registerEntry.html"))

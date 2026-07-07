@@ -6,6 +6,7 @@
     <title>Event Register</title>
 </head>
 <body>
+    <div style="text-align: right;">{{if ne .CurrentUser nil}}Logged in as <span style="color:green;">{{.CurrentUser.Name}}</span>{{else}}<a href="/login">Log in</a>{{end}}</div>
     <main>
         {{block "content" .}}
             <p>There should be content here.</p>

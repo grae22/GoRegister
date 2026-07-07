@@ -2,7 +2,9 @@ package web
 
 import (
 	"errors"
+	"goregister/domain"
 	"goregister/services"
+	"goregister/utils"
 	"html/template"
 	"net/http"
 )
@@ -12,7 +14,8 @@ type UsersController struct {
 }
 
 type loginPageData struct {
-	HasFailed bool
+	CurrentUser *domain.User
+	HasFailed   bool
 }
 
 func NewUsersController(
@@ -36,8 +39,11 @@ func (c *UsersController) HandleLoginPage(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	requestCtx := utils.NewRequestContext(c.usersService, r)
+
 	data := loginPageData{
-		HasFailed: r.URL.Query().Has("failed"),
+		CurrentUser: requestCtx.User,
+		HasFailed:   r.URL.Query().Has("failed"),
 	}
 
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/login.html"))
