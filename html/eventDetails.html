@@ -12,7 +12,7 @@
     <label>Organiser</label><br />
     <select name="organiserId" id="organiserId" required>
     {{range .Users}}
-        <option value="{{.Id}}" {{if eq .Id $.CurrentUserId}}selected{{end}}>{{.Name}}</option>
+        <option value="{{.Id}}" {{if eq .Id $.OrganiserId}}selected{{end}}>{{.Name}}</option>
     {{end}}
     </select><br />
     <button type="submit">Submit</button>

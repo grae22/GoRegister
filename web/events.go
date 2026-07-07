@@ -24,6 +24,7 @@ type eventsPageData struct {
 }
 
 type eventDetailsPageData struct {
+	CurrentUser   *domain.User
 	IdempotencyId string
 	IsUpdate      bool
 	Date          string
@@ -31,7 +32,6 @@ type eventDetailsPageData struct {
 	Title         string
 	Users         []domain.User
 	OrganiserId   string
-	CurrentUserId string
 }
 
 func NewEventsController(
@@ -58,7 +58,11 @@ func (c *EventsController) HandleEvents(w http.ResponseWriter, r *http.Request) 
 	requestCtx := utils.NewRequestContext(c.usersService, r)
 
 	if requestCtx.User == nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		http.Redirect(
+			w,
+			r,
+			"/login",
+			http.StatusSeeOther)
 		return
 	}
 
@@ -67,7 +71,7 @@ func (c *EventsController) HandleEvents(w http.ResponseWriter, r *http.Request) 
 	if isGetAllEvents {
 		handleGetAllEvents(w, c, requestCtx)
 	} else if isGetOneEvent {
-		handleGetOneEvent(w, c, eventId)
+		handleGetOneEvent(w, c, eventId, requestCtx)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 	}
@@ -84,7 +88,7 @@ func (c *EventsController) HandleAddEvent(w http.ResponseWriter, r *http.Request
 	}
 
 	if requestCtx.User != nil {
-		data.CurrentUserId = requestCtx.User.Id
+		data.CurrentUser = requestCtx.User
 	}
 
 	tmpl.ExecuteTemplate(w, "layout", data)
@@ -128,6 +132,7 @@ func handleGetOneEvent(
 	w http.ResponseWriter,
 	c *EventsController,
 	eventId string,
+	ctx *utils.RequestCtx,
 ) {
 	e := c.eventsService.GetEvent(eventId)
 	if e == nil {
@@ -144,8 +149,15 @@ func handleGetOneEvent(
 		Time:          e.Date.Format("15:04"),
 		Title:         e.Title,
 		OrganiserId:   e.OrganiserId,
-		CurrentUserId: e.OrganiserId,
 		Users:         c.usersService.GetUsers(),
+	}
+
+	if ctx.User != nil {
+		data.CurrentUser = ctx.User
+
+		if len(data.OrganiserId) == 0 {
+			data.OrganiserId = ctx.User.Id
+		}
 	}
 
 	tmpl.ExecuteTemplate(w, "layout", data)
