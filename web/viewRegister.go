@@ -16,6 +16,7 @@ type registerPageData struct {
 	Event                *domain.EventRegister
 	PaymentOptionsById   map[string]domain.PaymentOption
 	SortedPaymentOptions []domain.PaymentOption
+	NameByUserId         map[string]string
 }
 
 func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Request) {
@@ -45,6 +46,12 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 		Event:                event,
 		PaymentOptionsById:   map[string]domain.PaymentOption{},
 		SortedPaymentOptions: []domain.PaymentOption{},
+		NameByUserId:         map[string]string{},
+	}
+
+	users := c.usersService.GetUsers()
+	for _, u := range users {
+		data.NameByUserId[u.Id] = u.Name
 	}
 
 	for _, e := range event.Entries {

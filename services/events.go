@@ -21,7 +21,7 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 		"123",
 		time.Now(),
 		"Test",
-		"gb",
+		"graemeb",
 		map[string]domain.PaymentOption{
 			"rhino": {
 				Id:                          "rhino",

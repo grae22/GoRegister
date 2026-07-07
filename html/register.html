@@ -3,7 +3,7 @@
 <h1>{{.Event.Title}}</h1>
 <p>
     Date & Time: <b>{{.Event.Date.Format "2006-01-02 15h04"}}</b><br />
-    Organiser: <b>{{.Event.OrganiserId}}</b>
+    Organiser: <b>{{index .NameByUserId .Event.OrganiserId}}</b>
 </p>
 <div style="text-align: right;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">Sign in</a></div>
 <table>

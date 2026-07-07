@@ -19,8 +19,9 @@ type EventsController struct {
 }
 
 type eventsPageData struct {
-	CurrentUser *domain.User
-	Events      []*domain.EventRegister
+	CurrentUser  *domain.User
+	Events       []*domain.EventRegister
+	NameByUserId map[string]string
 }
 
 type eventDetailsPageData struct {
@@ -115,8 +116,14 @@ func handleGetAllEvents(
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/events.html"))
 
 	data := eventsPageData{
-		CurrentUser: ctx.User,
-		Events:      c.eventsService.GetEvents(),
+		CurrentUser:  ctx.User,
+		Events:       c.eventsService.GetEvents(),
+		NameByUserId: map[string]string{},
+	}
+
+	users := c.usersService.GetUsers()
+	for _, u := range users {
+		data.NameByUserId[u.Id] = u.Name
 	}
 
 	slices.SortFunc(

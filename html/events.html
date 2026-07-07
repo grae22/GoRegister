@@ -1,4 +1,5 @@
 {{define "content"}}
+{{$data := .}}
 <h1>Events</h1>
 <div style="text-align: right;"><a href="/addEvent">Add Event</a></div>
 <table>
@@ -9,7 +10,7 @@
         <tr>
             <td>{{.Date.Format "2006-01-02 15h04"}}</td>
             <td>{{.Title}}</td>
-            <td>{{.OrganiserId}}</td>
+            <td>{{index $data.NameByUserId .OrganiserId}}</td>
             <td><a href="/events/{{.IdempotencyId}}">Edit</a></td>
             <td><a href="/registers/{{.IdempotencyId}}">Register</a></td>
         </tr>
