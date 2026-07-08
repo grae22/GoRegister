@@ -10,6 +10,8 @@
     <input type="text" name="contact" value="{{.Entry.PersonContactNumber}}" required><br />
     <label>Vehicle registration</label><br />
     <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />
+    <label>Rhino card</label><br />
+    <input type="text" name="rhinoCard" value="{{.Entry.RhinoCard}}"><br />
     <div style="border-color: red; border-width: 2px; border-style: dashed;">
     <span style="color: red;">Enter the NUMBER of entrants per payment category:</span><br /><br />
     {{range .PaymentOptions}}

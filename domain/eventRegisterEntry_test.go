@@ -11,6 +11,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 	const personName string = "name"
 	const personContactNumber string = "+27123456789"
 	const vehicleRegistration string = "ND123"
+	const rhinoCard string = "G123"
 	const amountPaidInC int = 70
 	const isConditionsAccepted bool = true
 
@@ -24,6 +25,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		personName,
 		personContactNumber,
 		vehicleRegistration,
+		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
 		isConditionsAccepted,
@@ -34,6 +36,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		" ",
 		personContactNumber,
 		vehicleRegistration,
+		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
 		isConditionsAccepted,
@@ -44,6 +47,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		personName,
 		" ",
 		vehicleRegistration,
+		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
 		isConditionsAccepted,
@@ -54,6 +58,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		personName,
 		personContactNumber,
 		" ",
+		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
 		isConditionsAccepted,
@@ -64,6 +69,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		personName,
 		personContactNumber,
 		vehicleRegistration,
+		rhinoCard,
 		nil,
 		amountPaidInC,
 		isConditionsAccepted,
@@ -74,6 +80,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		personName,
 		personContactNumber,
 		vehicleRegistration,
+		rhinoCard,
 		entrantCountByType,
 		-1,
 		isConditionsAccepted,
@@ -84,6 +91,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		personName,
 		personContactNumber,
 		vehicleRegistration,
+		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
 		false,
@@ -125,6 +133,7 @@ func TestNewEventRegisterEntry_WhenParamsOk_ThenObjectReturned(t *testing.T) {
 	const personName string = "name"
 	const personContactNumber string = "+27123456789"
 	const vehicleRegistration string = "ND123"
+	const rhinoCard string = "G123"
 	const amountPaidInC int = 70
 	const isConditionsAccepted bool = true
 
@@ -138,6 +147,7 @@ func TestNewEventRegisterEntry_WhenParamsOk_ThenObjectReturned(t *testing.T) {
 		personName,
 		personContactNumber,
 		vehicleRegistration,
+		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
 		isConditionsAccepted,

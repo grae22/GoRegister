@@ -165,6 +165,7 @@ func TestAddEntry_WhenDuplicateIdempotencyReceived_ThenEntryIsNotAdded(t *testin
 		"name",
 		"+27...",
 		"ND123",
+		"G...",
 		map[string]int{
 			"cash": 0,
 		},

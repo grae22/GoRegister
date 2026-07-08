@@ -11,6 +11,7 @@ type EventRegisterEntry struct {
 	PersonName                  string
 	PersonContactNumber         string
 	VehicleRegistration         string
+	RhinoCard                   string
 	EntrantCountByPaymentTypeId map[string]int
 	AmountDueInC                int
 	IsConditionsAccepted        bool
@@ -22,6 +23,7 @@ func NewEventRegisterEntry(
 	personName string,
 	personContactNumber string,
 	vehicleRegistration string,
+	rhinoCard string,
 	entrantCountByPaymentTypeId map[string]int,
 	amountDueInC int,
 	isConditionsAccepted bool,
@@ -57,6 +59,7 @@ func NewEventRegisterEntry(
 		PersonName:                  personName,
 		PersonContactNumber:         personContactNumber,
 		VehicleRegistration:         vehicleRegistration,
+		RhinoCard:                   rhinoCard,
 		EntrantCountByPaymentTypeId: entrantCountByPaymentTypeId,
 		AmountDueInC:                amountDueInC,
 		IsConditionsAccepted:        isConditionsAccepted,

@@ -15,6 +15,7 @@ type AddRegisterEntry struct {
 	Name                      string
 	ContactNumber             string
 	VehicleRegistration       string
+	RhinoCard                 string
 	EntrantCountByPaymentType map[string]int
 	AmountDueInC              int
 	IsConditionsAccepted      bool

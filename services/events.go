@@ -44,6 +44,7 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 		"Person 1",
 		"+27...",
 		"ND...",
+		"G...",
 		map[string]int{
 			"rhino": 2,
 			"adult": 1,
@@ -57,6 +58,7 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 		"Person 2",
 		"+27...",
 		"NP...",
+		"G...",
 		map[string]int{
 			"rhino": 1,
 			"adult": 2,
@@ -142,6 +144,7 @@ func (s *EventsService) AddRegisterEntry(newEntry dto.AddRegisterEntry) error {
 		newEntry.Name,
 		newEntry.ContactNumber,
 		newEntry.VehicleRegistration,
+		newEntry.RhinoCard,
 		newEntry.EntrantCountByPaymentType,
 		newEntry.AmountDueInC,
 		newEntry.IsConditionsAccepted,

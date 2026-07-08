@@ -12,6 +12,7 @@
     <th>Name</th>
     <th>Phone</th>
     <th>Vehicle Reg.</th>
+    <th>Rhino Card</th>
     {{range .SortedPaymentOptions}}
         <th style="text-align: center;">{{.Name}}</th>
     {{end}}
@@ -21,6 +22,7 @@
             <td>{{$e.PersonName}}</td>
             <td>{{$e.PersonContactNumber}}</td>
             <td>{{$e.VehicleRegistration}}</td>
+            <td>{{$e.RhinoCard}}</td>
             {{range $o := $data.SortedPaymentOptions}}
                 <td style="text-align: center;">{{with (index $e.EntrantCountByPaymentTypeId $o.Id)}}{{.}}{{else}}-{{end}}</td>
             {{end}}

@@ -63,6 +63,7 @@ func handleAddRegisterEntry(
 		Name:                      r.FormValue("name"),
 		ContactNumber:             r.FormValue("contact"),
 		VehicleRegistration:       r.FormValue("vehicleReg"),
+		RhinoCard:                 r.FormValue("rhinoCard"),
 		EntrantCountByPaymentType: getEntrantCounts(r),
 		IsConditionsAccepted:      r.FormValue("conditions") == "yes",
 	}
@@ -80,7 +81,6 @@ func handleAddRegisterEntry(
 	if !isUpdate {
 		err = api.events.AddRegisterEntry(e)
 	} else {
-		//err = api.events.UpdateEvent(e)
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
