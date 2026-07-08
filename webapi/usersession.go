@@ -5,6 +5,7 @@ import (
 	"goregister/services"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type UserSessionApi struct {
@@ -23,9 +24,14 @@ func NewUserSessionApi(users *services.UsersService) (*UserSessionApi, error) {
 }
 
 func (a *UserSessionApi) Handle(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	switch r.Method {
+	case http.MethodPost:
 		a.handleLogin(w, r)
-	} else {
+
+	case http.MethodDelete:
+		a.handleLogout(w, r)
+
+	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
@@ -44,15 +50,7 @@ func (a *UserSessionApi) handleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if a.users.ValidatePassword(username, password) {
-		c := http.Cookie{
-			Name:     "user",
-			Value:    username,
-			Path:     "/",
-			MaxAge:   2678400,
-			HttpOnly: true,
-			Secure:   true,
-			SameSite: http.SameSiteLaxMode,
-		}
+		c := createUserCookie(username)
 
 		http.SetCookie(w, &c)
 
@@ -67,5 +65,29 @@ func (a *UserSessionApi) handleLogin(w http.ResponseWriter, r *http.Request) {
 			r,
 			"/login?failed",
 			http.StatusSeeOther)
+	}
+}
+
+func (a *UserSessionApi) handleLogout(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("user")
+	if err == nil {
+		newC := createUserCookie(c.Value)
+		newC.Expires = time.Unix(0, 0)
+		newC.MaxAge = -1
+		http.SetCookie(w, &newC)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func createUserCookie(userId string) http.Cookie {
+	return http.Cookie{
+		Name:     "user",
+		Value:    userId,
+		Path:     "/",
+		MaxAge:   2678400,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
 	}
 }

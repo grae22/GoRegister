@@ -6,12 +6,24 @@
     <title>Event Register</title>
 </head>
 <body>
-    <div style="text-align: right;">{{if ne .CurrentUser nil}}Logged in as <span style="color:green;">{{.CurrentUser.Name}}</span>{{else}}<a href="/login">Log in</a>{{end}}</div>
+    <div style="text-align: right;">
+    {{if ne .CurrentUser nil}}
+        Logged in as <span style="color:green;">{{.CurrentUser.Name}}</span> (<a onClick="logout()" href="#">Log out</a>)
+    {{else}}
+        <a href="/login">Log in</a>
+    {{end}}
+    </div>
     <main>
         {{block "content" .}}
             <p>There should be content here.</p>
         {{end}}
     </main>
+    <script language="javascript">
+        async function logout() {
+            const response = await fetch("/api/usersession", { method: "DELETE" });
+            location.reload();
+        }
+    </script>
 </body>
 </html>
 {{end}}
