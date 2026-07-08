@@ -64,7 +64,7 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 			"adult": 2,
 			"child": 1,
 		},
-		14000,
+		17500,
 		true,
 		time.Now())
 
@@ -123,6 +123,7 @@ func (s *EventsService) UpdateEvent(newEvent dto.AddEventDto) error {
 	e.Date = newEvent.Date
 	e.Title = newEvent.Title
 	e.OrganiserId = newEvent.OrganiserId
+	e.IsPaymentCompleted = newEvent.IsPaymentCompleted
 
 	return nil
 }

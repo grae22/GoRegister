@@ -64,10 +64,11 @@ func handleAddEvent(
 	}
 
 	e := dto.AddEventDto{
-		IdempotencyId: r.FormValue("idempotencyId"),
-		Date:          date,
-		Title:         r.FormValue("title"),
-		OrganiserId:   r.FormValue("organiserId"),
+		IdempotencyId:      r.FormValue("idempotencyId"),
+		Date:               date,
+		Title:              r.FormValue("title"),
+		OrganiserId:        r.FormValue("organiserId"),
+		IsPaymentCompleted: r.FormValue("paymentCompleted") == "paid",
 	}
 
 	if !isUpdate {

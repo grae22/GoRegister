@@ -3,10 +3,11 @@ package dto
 import "time"
 
 type AddEventDto struct {
-	IdempotencyId string
-	Date          time.Time
-	Title         string
-	OrganiserId   string
+	IdempotencyId      string
+	Date               time.Time
+	Title              string
+	OrganiserId        string
+	IsPaymentCompleted bool
 }
 
 type AddRegisterEntry struct {

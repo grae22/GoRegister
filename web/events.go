@@ -29,14 +29,15 @@ type eventsPageData struct {
 }
 
 type eventDetailsPageData struct {
-	Layout        Layout
-	IdempotencyId string
-	IsUpdate      bool
-	Date          string
-	Time          string
-	Title         string
-	Users         []domain.User
-	OrganiserId   string
+	Layout             Layout
+	IdempotencyId      string
+	IsUpdate           bool
+	Date               string
+	Time               string
+	Title              string
+	Users              []domain.User
+	OrganiserId        string
+	IsPaymentCompleted bool
 }
 
 func NewEventsController(
@@ -184,14 +185,15 @@ func handleGetOneEvent(
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
-		Layout:        NewLayout(true, *ctx),
-		IdempotencyId: eventId,
-		IsUpdate:      true,
-		Date:          e.Date.Format("2006-01-02"),
-		Time:          e.Date.Format("15:04"),
-		Title:         e.Title,
-		OrganiserId:   e.OrganiserId,
-		Users:         c.usersService.GetUsers(),
+		Layout:             NewLayout(true, *ctx),
+		IdempotencyId:      eventId,
+		IsUpdate:           true,
+		Date:               e.Date.Format("2006-01-02"),
+		Time:               e.Date.Format("15:04"),
+		Title:              e.Title,
+		OrganiserId:        e.OrganiserId,
+		IsPaymentCompleted: e.IsPaymentCompleted,
+		Users:              c.usersService.GetUsers(),
 	}
 
 	if len(data.OrganiserId) == 0 {
