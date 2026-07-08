@@ -1,0 +1,2 @@
+x Lock/unlock register.
+x Mark event status as "paid to reserve".
