@@ -22,11 +22,7 @@ func NewRequestContext(
 }
 
 func (ctx *RequestCtx) RetrieveUser(users *services.UsersService, r *http.Request) {
-	guest := domain.User{
-		Id:          "guest",
-		Name:        "Guest",
-		Permissions: domain.PermissionNone,
-	}
+	guest := domain.NewGuestUser()
 
 	c, err := r.Cookie("user")
 	if err != nil {

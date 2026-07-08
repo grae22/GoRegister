@@ -9,9 +9,9 @@
     <div style="text-align: right;">
     Logged in as <span style="color:green;">{{.CurrentUser.Name}}</span> 
     {{if .CurrentUser.IsGuest}}
-        &nbsp;(<a href="/login">Log in</a>)
+        (<a href="/login">Log in</a>)
     {{else}}
-        &nbsp;(<a onClick="logout()" href="#">Log out</a>)        
+        (<a onClick="logout()" href="#">Log out</a>)        
     {{end}}
     </div>
     <main>

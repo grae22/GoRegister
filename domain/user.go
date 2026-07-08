@@ -15,7 +15,7 @@ const (
 	PermissionDeleteRegisterEntry
 )
 
-const GuestId string = "guest"
+const guestId string = "guest"
 
 type User struct {
 	Id          string
@@ -47,11 +47,21 @@ func NewUser(
 		Id:          id,
 		Name:        name,
 		Permissions: permissions,
-		IsGuest:     id == GuestId,
+		IsGuest:     id == guestId,
 		password:    encrypt(password),
 	}
 
 	return &o, nil
+}
+
+func NewGuestUser() User {
+	return User{
+		Id:          guestId,
+		Name:        "Guest",
+		Permissions: PermissionNone,
+		IsGuest:     true,
+		password:    encrypt("guest"),
+	}
 }
 
 func (u *User) VerifyPassword(pwd string) bool {

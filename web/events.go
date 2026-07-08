@@ -126,6 +126,8 @@ func handleGetAllEvents(
 		CurrentUser:  ctx.User,
 		Events:       c.eventsService.GetEvents(),
 		NameByUserId: map[string]string{},
+		UserCanAdd:   ctx.User.HasPermission(domain.PermissionManageEvents),
+		UserCanEdit:  ctx.User.HasPermission(domain.PermissionManageEvents),
 	}
 
 	users := c.usersService.GetUsers()
