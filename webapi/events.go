@@ -2,8 +2,10 @@ package webapi
 
 import (
 	"errors"
+	"goregister/domain"
 	"goregister/dto"
 	"goregister/services"
+	"goregister/utils"
 	"net/http"
 	"time"
 )
@@ -46,6 +48,13 @@ func handleAddEvent(
 	r *http.Request,
 	api *EventsApi,
 ) {
+	requestCtx := utils.NewRequestContext(api.users, r)
+
+	if !requestCtx.User.HasPermission(domain.PermissionManageEvents) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	isUpdate := r.FormValue("isUpdate") == "true"
 
 	date, err := time.Parse("2006-01-02 15:04", r.FormValue("date")+" "+r.FormValue("time"))

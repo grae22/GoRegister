@@ -12,7 +12,7 @@ import (
 )
 
 type addRegisterEntryPageData struct {
-	CurrentUser    *domain.User
+	CurrentUser    domain.User
 	EventId        string
 	IdempotencyId  string
 	IsUpdate       bool
@@ -49,7 +49,7 @@ func (c *RegistersController) HandleAddRegisterEntry(w http.ResponseWriter, r *h
 		PaymentOptions: paymentOptions,
 	}
 
-	if requestCtx.User != nil {
+	if !requestCtx.User.IsGuest {
 		data.Entry.PersonName = requestCtx.User.Name
 	}
 

@@ -19,13 +19,15 @@ type EventsController struct {
 }
 
 type eventsPageData struct {
-	CurrentUser  *domain.User
+	CurrentUser  domain.User
 	Events       []*domain.EventRegister
 	NameByUserId map[string]string
+	UserCanAdd   bool
+	UserCanEdit  bool
 }
 
 type eventDetailsPageData struct {
-	CurrentUser   *domain.User
+	CurrentUser   domain.User
 	IdempotencyId string
 	IsUpdate      bool
 	Date          string
@@ -58,7 +60,7 @@ func NewEventsController(
 func (c *EventsController) HandleEvents(w http.ResponseWriter, r *http.Request) {
 	requestCtx := utils.NewRequestContext(c.usersService, r)
 
-	if requestCtx.User == nil {
+	if !requestCtx.User.HasPermission(domain.PermissionViewAllEvents) {
 		http.Redirect(
 			w,
 			r,
@@ -81,15 +83,17 @@ func (c *EventsController) HandleEvents(w http.ResponseWriter, r *http.Request) 
 func (c *EventsController) HandleAddEvent(w http.ResponseWriter, r *http.Request) {
 	requestCtx := utils.NewRequestContext(c.usersService, r)
 
+	if !requestCtx.User.HasPermission(domain.PermissionManageEvents) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
+		CurrentUser:   requestCtx.User,
 		IdempotencyId: uuid.New().String(),
 		Users:         c.usersService.GetUsers(),
-	}
-
-	if requestCtx.User != nil {
-		data.CurrentUser = requestCtx.User
 	}
 
 	tmpl.ExecuteTemplate(w, "layout", data)
@@ -113,7 +117,10 @@ func handleGetAllEvents(
 	c *EventsController,
 	ctx *utils.RequestCtx,
 ) {
-	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/events.html"))
+	if !ctx.User.HasPermission(domain.PermissionViewAllEvents) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	data := eventsPageData{
 		CurrentUser:  ctx.User,
@@ -132,6 +139,7 @@ func handleGetAllEvents(
 			return b.Date.Compare(a.Date)
 		})
 
+	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/events.html"))
 	tmpl.ExecuteTemplate(w, "layout", data)
 }
 
@@ -141,6 +149,11 @@ func handleGetOneEvent(
 	eventId string,
 	ctx *utils.RequestCtx,
 ) {
+	if !ctx.User.HasPermission(domain.PermissionManageEvents) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	e := c.eventsService.GetEvent(eventId)
 	if e == nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -150,6 +163,7 @@ func handleGetOneEvent(
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
+		CurrentUser:   ctx.User,
 		IdempotencyId: eventId,
 		IsUpdate:      true,
 		Date:          e.Date.Format("2006-01-02"),
@@ -159,12 +173,8 @@ func handleGetOneEvent(
 		Users:         c.usersService.GetUsers(),
 	}
 
-	if ctx.User != nil {
-		data.CurrentUser = ctx.User
-
-		if len(data.OrganiserId) == 0 {
-			data.OrganiserId = ctx.User.Id
-		}
+	if len(data.OrganiserId) == 0 {
+		data.OrganiserId = ctx.User.Id
 	}
 
 	tmpl.ExecuteTemplate(w, "layout", data)

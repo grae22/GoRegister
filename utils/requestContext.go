@@ -7,7 +7,7 @@ import (
 )
 
 type RequestCtx struct {
-	User *domain.User
+	User domain.User
 }
 
 func NewRequestContext(
@@ -22,16 +22,24 @@ func NewRequestContext(
 }
 
 func (ctx *RequestCtx) RetrieveUser(users *services.UsersService, r *http.Request) {
+	guest := domain.User{
+		Id:          "guest",
+		Name:        "Guest",
+		Permissions: domain.PermissionNone,
+	}
+
 	c, err := r.Cookie("user")
 	if err != nil {
+		ctx.User = guest
 		return
 	}
 
 	userId := c.Value
 	u, ok := users.GetUserById(userId)
 	if !ok {
+		ctx.User = guest
 		return
 	}
 
-	ctx.User = &u
+	ctx.User = u
 }

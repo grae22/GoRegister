@@ -25,7 +25,6 @@
                 <td style="text-align: center;">{{with (index $e.EntrantCountByPaymentTypeId $o.Id)}}{{.}}{{else}}-{{end}}</td>
             {{end}}
             <td style="text-align: center;">{{centsToRandsStr $e.AmountDueInC}}</td>
-            <!--<td><a href="/registers/{{$data.Event.IdempotencyId}}/entries/{{$e.IdempotencyId}}">Edit</a></td>-->
         </tr>
     {{end}}
 </table>

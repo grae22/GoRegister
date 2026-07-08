@@ -14,7 +14,7 @@ type UsersController struct {
 }
 
 type loginPageData struct {
-	CurrentUser *domain.User
+	CurrentUser domain.User
 	HasFailed   bool
 }
 

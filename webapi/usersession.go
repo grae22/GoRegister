@@ -2,6 +2,7 @@ package webapi
 
 import (
 	"errors"
+	"goregister/domain"
 	"goregister/services"
 	"net/http"
 	"strings"
@@ -49,7 +50,9 @@ func (a *UserSessionApi) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if a.users.ValidatePassword(username, password) {
+	if a.users.HasPermission(username, domain.PermissionLogin) &&
+		a.users.ValidatePassword(username, password) {
+
 		c := createUserCookie(username)
 
 		http.SetCookie(w, &c)

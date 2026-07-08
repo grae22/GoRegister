@@ -5,16 +5,31 @@ import (
 	"strings"
 )
 
+type UserPermissions int
+
+const (
+	PermissionNone                  = 0
+	PermissionLogin UserPermissions = 1 << iota
+	PermissionViewAllEvents
+	PermissionManageEvents
+	PermissionDeleteRegisterEntry
+)
+
+const GuestId string = "guest"
+
 type User struct {
-	Id       string
-	Name     string
-	password string
+	Id          string
+	Name        string
+	Permissions UserPermissions
+	IsGuest     bool
+	password    string
 }
 
 func NewUser(
 	id string,
 	name string,
 	password string,
+	permissions UserPermissions,
 ) (*User, error) {
 
 	id = strings.TrimSpace(id)
@@ -29,9 +44,11 @@ func NewUser(
 	}
 
 	o := User{
-		Id:       id,
-		Name:     name,
-		password: encrypt(password),
+		Id:          id,
+		Name:        name,
+		Permissions: permissions,
+		IsGuest:     id == GuestId,
+		password:    encrypt(password),
 	}
 
 	return &o, nil
@@ -51,6 +68,10 @@ func (u *User) VerifyPassword(pwd string) bool {
 	}
 
 	return true
+}
+
+func (u *User) HasPermission(p UserPermissions) bool {
+	return u.Permissions&p == p
 }
 
 func encrypt(s string) string {

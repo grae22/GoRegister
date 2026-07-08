@@ -13,7 +13,7 @@ import (
 
 type registerPageData struct {
 	Link                 string
-	CurrentUser          *domain.User
+	CurrentUser          domain.User
 	Event                *domain.EventRegister
 	PaymentOptionsById   map[string]domain.PaymentOption
 	SortedPaymentOptions []domain.PaymentOption
