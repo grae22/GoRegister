@@ -1,13 +1,11 @@
 package web
 
 import (
-	"fmt"
 	"goregister/domain"
 	"goregister/utils"
 	"html/template"
 	"net/http"
 	"slices"
-	"strconv"
 	"strings"
 )
 
@@ -78,7 +76,7 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 
 	tmpl := template.
 		Must(template.New("register").
-			Funcs(template.FuncMap{"centsToRandsStr": centsToRandsStr}).
+			Funcs(template.FuncMap{"centsToRandsStr": utils.CentsToRandsStr}).
 			ParseFiles("html/layout.html", "html/register.html"))
 
 	tmpl.ExecuteTemplate(w, "layout", data)
@@ -95,15 +93,4 @@ func getEventIdFromUrl(r *http.Request) string {
 	}
 
 	return registerId
-}
-
-func centsToRandsStr(c int) string {
-	r := c / 100
-	c = c % 100
-
-	if c == 0 {
-		return strconv.Itoa(r)
-	} else {
-		return fmt.Sprintf("%d.%0*d", r, c, 2)
-	}
 }

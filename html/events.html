@@ -6,11 +6,13 @@
     <th>Date & Time</th>
     <th>Title</th>
     <th>Organiser</th>
+    <th>Paid (R)</th>
     {{range .Events}}
         <tr>
             <td>{{.Date.Format "2006-01-02 15h04"}}</td>
             <td>{{.Title}}</td>
             <td>{{index $data.NameByUserId .OrganiserId}}</td>
+            <td style="text-align: center;color: {{if .IsPaymentCompleted}}green{{else}}red{{end}};">{{centsToRandsStr (index $data.AmountDueInCByEventId .IdempotencyId)}}</td>
             {{if $data.UserCanEdit}}<td><a href="/events/{{.IdempotencyId}}">Edit</a></td>{{end}}
             <td><a href="/registers/{{.IdempotencyId}}">View Register</a></td>
         </tr>

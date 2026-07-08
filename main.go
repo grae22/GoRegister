@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 
-	eventsController, err := web.NewEventsController(eventsService, usersService)
+	eventsController, err := web.NewEventsController(settingsService, eventsService, usersService)
 	if err != nil {
 		log.Fatalf("Failed to create events controller: %v", err)
 		return

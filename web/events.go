@@ -14,16 +14,18 @@ import (
 )
 
 type EventsController struct {
-	eventsService *services.EventsService
-	usersService  *services.UsersService
+	settingsService *services.SettingsService
+	eventsService   *services.EventsService
+	usersService    *services.UsersService
 }
 
 type eventsPageData struct {
-	Layout       Layout
-	Events       []*domain.EventRegister
-	NameByUserId map[string]string
-	UserCanAdd   bool
-	UserCanEdit  bool
+	Layout                Layout
+	Events                []*domain.EventRegister
+	AmountDueInCByEventId map[string]int
+	NameByUserId          map[string]string
+	UserCanAdd            bool
+	UserCanEdit           bool
 }
 
 type eventDetailsPageData struct {
@@ -38,9 +40,14 @@ type eventDetailsPageData struct {
 }
 
 func NewEventsController(
+	ss *services.SettingsService,
 	es *services.EventsService,
 	us *services.UsersService,
 ) (*EventsController, error) {
+
+	if ss == nil {
+		return nil, errors.New("Received nil settings service")
+	}
 
 	if es == nil {
 		return nil, errors.New("Received nil events service")
@@ -51,8 +58,9 @@ func NewEventsController(
 	}
 
 	return &EventsController{
-			eventsService: es,
-			usersService:  us,
+			settingsService: ss,
+			eventsService:   es,
+			usersService:    us,
 		},
 		nil
 }
@@ -123,16 +131,23 @@ func handleGetAllEvents(
 	}
 
 	data := eventsPageData{
-		Layout:       NewLayout(true, ctx),
-		Events:       c.eventsService.GetEvents(),
-		NameByUserId: map[string]string{},
-		UserCanAdd:   ctx.User.HasPermission(domain.PermissionManageEvents),
-		UserCanEdit:  ctx.User.HasPermission(domain.PermissionManageEvents),
+		Layout:                NewLayout(true, ctx),
+		Events:                c.eventsService.GetEvents(),
+		AmountDueInCByEventId: map[string]int{},
+		NameByUserId:          map[string]string{},
+		UserCanAdd:            ctx.User.HasPermission(domain.PermissionManageEvents),
+		UserCanEdit:           ctx.User.HasPermission(domain.PermissionManageEvents),
 	}
 
 	users := c.usersService.GetUsers()
 	for _, u := range users {
 		data.NameByUserId[u.Id] = u.Name
+	}
+
+	paymentOptions := c.settingsService.GetPaymentOptions()
+
+	for _, e := range data.Events {
+		data.AmountDueInCByEventId[e.IdempotencyId] = e.CalculateAmountDueInC(paymentOptions)
 	}
 
 	slices.SortFunc(
@@ -141,7 +156,11 @@ func handleGetAllEvents(
 			return b.Date.Compare(a.Date)
 		})
 
-	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/events.html"))
+	tmpl := template.
+		Must(template.New("events").
+			Funcs(template.FuncMap{"centsToRandsStr": utils.CentsToRandsStr}).
+			ParseFiles("html/layout.html", "html/events.html"))
+
 	tmpl.ExecuteTemplate(w, "layout", data)
 }
 

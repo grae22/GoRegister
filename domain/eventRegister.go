@@ -13,6 +13,7 @@ type EventRegister struct {
 	OrganiserId        string
 	PaymentOptionsById map[string]PaymentOption
 	Entries            []*EventRegisterEntry
+	IsPaymentCompleted bool
 }
 
 func NewEventRegister(
@@ -55,12 +56,33 @@ func NewEventRegister(
 	return &r, nil
 }
 
-func (er *EventRegister) AddEntry(entry *EventRegisterEntry) {
-	for _, e := range er.Entries {
+func (r *EventRegister) AddEntry(entry *EventRegisterEntry) {
+	for _, e := range r.Entries {
 		if e.IdempotencyId == entry.IdempotencyId {
 			return
 		}
 	}
 
-	er.Entries = append(er.Entries, entry)
+	r.Entries = append(r.Entries, entry)
+}
+
+func (r *EventRegister) TogglePaymentComplete() {
+	r.IsPaymentCompleted = !r.IsPaymentCompleted
+}
+
+func (r *EventRegister) CalculateAmountDueInC(paymentOptions map[string]PaymentOption) int {
+	totalInC := 0
+
+	for _, e := range r.Entries {
+		for id, count := range e.EntrantCountByPaymentTypeId {
+			opt, ok := paymentOptions[id]
+			if !ok {
+				continue
+			}
+
+			totalInC += opt.ValueInC * count
+		}
+	}
+
+	return totalInC
 }
