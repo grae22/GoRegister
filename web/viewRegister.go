@@ -18,6 +18,7 @@ type registerPageData struct {
 	PaymentOptionsById   map[string]domain.PaymentOption
 	SortedPaymentOptions []domain.PaymentOption
 	NameByUserId         map[string]string
+	TotalDueInC          int
 }
 
 func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Request) {
@@ -65,6 +66,8 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 			data.PaymentOptionsById[t] = allPaymentOptions[t]
 			data.SortedPaymentOptions = append(data.SortedPaymentOptions, allPaymentOptions[t])
 		}
+
+		data.TotalDueInC += e.AmountDueInC
 	}
 
 	slices.SortFunc(
