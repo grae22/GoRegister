@@ -12,8 +12,8 @@ import (
 )
 
 type registerPageData struct {
+	Layout               Layout
 	Link                 string
-	CurrentUser          domain.User
 	Event                *domain.EventRegister
 	PaymentOptionsById   map[string]domain.PaymentOption
 	SortedPaymentOptions []domain.PaymentOption
@@ -44,8 +44,8 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 	allPaymentOptions := c.settingsService.GetPaymentOptions()
 
 	data := registerPageData{
+		Layout:               NewLayout(true, *requestCtx),
 		Link:                 c.settingsService.BaseUrl + "/registers/" + eventId,
-		CurrentUser:          requestCtx.User,
 		Event:                event,
 		PaymentOptionsById:   map[string]domain.PaymentOption{},
 		SortedPaymentOptions: []domain.PaymentOption{},

@@ -12,7 +12,7 @@ import (
 )
 
 type addRegisterEntryPageData struct {
-	CurrentUser    domain.User
+	Layout         Layout
 	EventId        string
 	IdempotencyId  string
 	IsUpdate       bool
@@ -42,7 +42,7 @@ func (c *RegistersController) HandleAddRegisterEntry(w http.ResponseWriter, r *h
 		})
 
 	data := addRegisterEntryPageData{
-		CurrentUser:    requestCtx.User,
+		Layout:         NewLayout(true, *requestCtx),
 		EventId:        r.URL.Query().Get("eventId"),
 		IdempotencyId:  uuid.New().String(),
 		Entry:          domain.EventRegisterEntry{},

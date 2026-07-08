@@ -19,7 +19,7 @@ type EventsController struct {
 }
 
 type eventsPageData struct {
-	CurrentUser  domain.User
+	Layout       Layout
 	Events       []*domain.EventRegister
 	NameByUserId map[string]string
 	UserCanAdd   bool
@@ -27,7 +27,7 @@ type eventsPageData struct {
 }
 
 type eventDetailsPageData struct {
-	CurrentUser   domain.User
+	Layout        Layout
 	IdempotencyId string
 	IsUpdate      bool
 	Date          string
@@ -72,7 +72,7 @@ func (c *EventsController) HandleEvents(w http.ResponseWriter, r *http.Request) 
 	isGetAllEvents, isGetOneEvent, eventId := interpretGetEventUrl(r)
 
 	if isGetAllEvents {
-		handleGetAllEvents(w, c, requestCtx)
+		handleGetAllEvents(w, c, *requestCtx)
 	} else if isGetOneEvent {
 		handleGetOneEvent(w, c, eventId, requestCtx)
 	} else {
@@ -91,7 +91,7 @@ func (c *EventsController) HandleAddEvent(w http.ResponseWriter, r *http.Request
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
-		CurrentUser:   requestCtx.User,
+		Layout:        NewLayout(true, *requestCtx),
 		IdempotencyId: uuid.New().String(),
 		Users:         c.usersService.GetUsers(),
 	}
@@ -115,7 +115,7 @@ func interpretGetEventUrl(r *http.Request) (isGetAllEvents bool, isGetOneEvent b
 func handleGetAllEvents(
 	w http.ResponseWriter,
 	c *EventsController,
-	ctx *utils.RequestCtx,
+	ctx utils.RequestCtx,
 ) {
 	if !ctx.User.HasPermission(domain.PermissionViewAllEvents) {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -123,7 +123,7 @@ func handleGetAllEvents(
 	}
 
 	data := eventsPageData{
-		CurrentUser:  ctx.User,
+		Layout:       NewLayout(true, ctx),
 		Events:       c.eventsService.GetEvents(),
 		NameByUserId: map[string]string{},
 		UserCanAdd:   ctx.User.HasPermission(domain.PermissionManageEvents),
@@ -165,7 +165,7 @@ func handleGetOneEvent(
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
-		CurrentUser:   ctx.User,
+		Layout:        NewLayout(true, *ctx),
 		IdempotencyId: eventId,
 		IsUpdate:      true,
 		Date:          e.Date.Format("2006-01-02"),

@@ -6,14 +6,23 @@
     <title>Event Register</title>
 </head>
 <body>
-    <div style="text-align: right;">
-    Logged in as <span style="color:green;">{{.CurrentUser.Name}}</span> 
-    {{if .CurrentUser.IsGuest}}
-        (<a href="/login">Log in</a>)
-    {{else}}
-        (<a onClick="logout()" href="#">Log out</a>)        
+    {{if .Layout.HasTopBar}}
+    <table>
+        <tr>
+            <td>
+                {{if .Layout.ShowAllEventsLink}}<a href="/events">All Events</a>{{end}}
+            </td>
+            <td style="text-align: right;">
+                Logged in as <span style="color:green;">{{.Layout.CurrentUser.Name}}</span> 
+                {{if .Layout.CurrentUser.IsGuest}}
+                    (<a href="/login">Log in</a>)
+                {{else}}
+                    (<a onClick="logout()" href="#">Log out</a>)        
+                {{end}}
+            </td>
+        </tr>
+    </table>
     {{end}}
-    </div>
     <main>
         {{block "content" .}}
             <p>There should be content here.</p>
