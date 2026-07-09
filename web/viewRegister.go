@@ -44,7 +44,7 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 
 	data := registerPageData{
 		Layout:               NewLayout(true, *requestCtx),
-		Link:                 c.settingsService.BaseUrl + "/registers/" + eventId,
+		Link:                 "https://" + r.Host + "/registers/" + eventId,
 		Event:                event,
 		PaymentOptionsById:   map[string]domain.PaymentOption{},
 		SortedPaymentOptions: []domain.PaymentOption{},
