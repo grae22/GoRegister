@@ -111,6 +111,8 @@ func (s *EventsService) AddEvent(newEvent dto.AddEventDto) (*domain.EventRegiste
 
 	s.events = append(s.events, e)
 
+	// TODO: Persist.
+
 	return e, nil
 }
 
@@ -135,6 +137,8 @@ func (s *EventsService) UpdateEvent(newEvent dto.AddEventDto) error {
 	if e.IsPaymentCompleted != newEvent.IsPaymentCompleted {
 		e.TogglePaymentComplete()
 	}
+
+	// TODO: Persist.
 
 	return nil
 }
@@ -165,6 +169,8 @@ func (s *EventsService) AddRegisterEntry(newEntry dto.AddRegisterEntry) error {
 	if err != nil {
 		return err
 	}
+
+	// TODO: Persist.
 
 	return e.AddEntry(ne)
 }
