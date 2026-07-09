@@ -12,7 +12,8 @@
             "debugAdapter": "dlv-dap",
             "host": "127.0.0.1",
             "program": "${workspaceFolder}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": { "PORT": "10222" }
         }
     ]
 }

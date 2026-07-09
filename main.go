@@ -6,6 +6,7 @@ import (
 	"goregister/webapi"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -72,5 +73,5 @@ func main() {
 	http.HandleFunc("/addRegisterEntry", registersController.HandleAddRegisterEntry)
 	http.HandleFunc("/api/registers", registersApi.Handle)
 
-	http.ListenAndServe(":10222", nil)
+	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
