@@ -26,6 +26,7 @@ type eventsPageData struct {
 	NameByUserId          map[string]string
 	UserCanAdd            bool
 	UserCanEdit           bool
+	TotalOwedInC          int
 }
 
 type eventDetailsPageData struct {
@@ -148,7 +149,13 @@ func handleGetAllEvents(
 	paymentOptions := c.settingsService.GetPaymentOptions()
 
 	for _, e := range data.Events {
-		data.AmountDueInCByEventId[e.IdempotencyId] = e.CalculateAmountDueInC(paymentOptions)
+		dueInC := e.CalculateAmountDueInC(paymentOptions)
+
+		data.AmountDueInCByEventId[e.IdempotencyId] = dueInC
+
+		if !e.IsPaymentCompleted {
+			data.TotalOwedInC += dueInC
+		}
 	}
 
 	slices.SortFunc(
