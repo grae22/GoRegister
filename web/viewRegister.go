@@ -17,6 +17,7 @@ type registerPageData struct {
 	SortedPaymentOptions []domain.PaymentOption
 	NameByUserId         map[string]string
 	TotalDueInC          int
+	CanEdit              bool
 }
 
 func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Request) {
@@ -48,6 +49,7 @@ func (c *RegistersController) HandleRegister(w http.ResponseWriter, r *http.Requ
 		PaymentOptionsById:   map[string]domain.PaymentOption{},
 		SortedPaymentOptions: []domain.PaymentOption{},
 		NameByUserId:         map[string]string{},
+		CanEdit:              requestCtx.User.HasPermission(domain.PermissionManageEvents),
 	}
 
 	users := c.usersService.GetUsers()

@@ -1,13 +1,18 @@
 {{define "content"}}
 {{$data := .}}
 <h1>{{.Event.Title}}</h1>
+{{if .CanEdit}}
+<a href="/events/{{.Event.IdempotencyId}}">Edit</a>
+{{end}}
 <p>
     Date & Time: <b>{{.Event.Date.Format "2006-01-02 15h04"}}</b><br />
     Organiser: <b>{{index .NameByUserId .Event.OrganiserId}}</b><br /><br />
     <input type="hidden" id="link" value="{{.Link}}">
     <button id="copyLink" onclick="copyLink()">Copy Link</button>
 </p>
+{{if .Event.AreNewEntriesAllowed}}
 <div style="text-align: right;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">Sign in</a></div>
+{{end}}
 <table>
     <th>Name</th>
     <th>Phone</th>

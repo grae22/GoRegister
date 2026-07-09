@@ -1,2 +1,1 @@
-x Lock/unlock register.
-x Mark event status as "paid to reserve".
+x Admin can delete register entries.

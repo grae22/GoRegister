@@ -30,15 +30,16 @@ type eventsPageData struct {
 }
 
 type eventDetailsPageData struct {
-	Layout             Layout
-	IdempotencyId      string
-	IsUpdate           bool
-	Date               string
-	Time               string
-	Title              string
-	Users              []domain.User
-	OrganiserId        string
-	IsPaymentCompleted bool
+	Layout               Layout
+	IdempotencyId        string
+	IsUpdate             bool
+	Date                 string
+	Time                 string
+	Title                string
+	Users                []domain.User
+	OrganiserId          string
+	AreNewEntriesAllowed bool
+	IsPaymentCompleted   bool
 }
 
 func NewEventsController(
@@ -101,9 +102,10 @@ func (c *EventsController) HandleAddEvent(w http.ResponseWriter, r *http.Request
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
-		Layout:        NewLayout(true, *requestCtx),
-		IdempotencyId: uuid.New().String(),
-		Users:         c.usersService.GetUsers(),
+		Layout:               NewLayout(true, *requestCtx),
+		IdempotencyId:        uuid.New().String(),
+		Users:                c.usersService.GetUsers(),
+		AreNewEntriesAllowed: true,
 	}
 
 	tmpl.ExecuteTemplate(w, "layout", data)
@@ -192,15 +194,16 @@ func handleGetOneEvent(
 	tmpl := template.Must(template.ParseFiles("html/layout.html", "html/eventDetails.html"))
 
 	data := eventDetailsPageData{
-		Layout:             NewLayout(true, *ctx),
-		IdempotencyId:      eventId,
-		IsUpdate:           true,
-		Date:               e.Date.Format("2006-01-02"),
-		Time:               e.Date.Format("15:04"),
-		Title:              e.Title,
-		OrganiserId:        e.OrganiserId,
-		IsPaymentCompleted: e.IsPaymentCompleted,
-		Users:              c.usersService.GetUsers(),
+		Layout:               NewLayout(true, *ctx),
+		IdempotencyId:        eventId,
+		IsUpdate:             true,
+		Date:                 e.Date.Format("2006-01-02"),
+		Time:                 e.Date.Format("15:04"),
+		Title:                e.Title,
+		OrganiserId:          e.OrganiserId,
+		AreNewEntriesAllowed: e.AreNewEntriesAllowed,
+		IsPaymentCompleted:   e.IsPaymentCompleted,
+		Users:                c.usersService.GetUsers(),
 	}
 
 	if len(data.OrganiserId) == 0 {

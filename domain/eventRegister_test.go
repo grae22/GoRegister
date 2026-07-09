@@ -183,3 +183,44 @@ func TestAddEntry_WhenDuplicateIdempotencyReceived_ThenEntryIsNotAdded(t *testin
 		t.Error("Only one entry should exist")
 	}
 }
+
+func TestAddEntry_WhenNewEntriesNotAllowed_ThenEntryIsNotAdded(t *testing.T) {
+	// Arrange.
+	const idempotencyId string = "abc"
+
+	r, _ := NewEventRegister(
+		"123",
+		time.Now(),
+		"title",
+		"oid",
+		map[string]PaymentOption{
+			"o1": {},
+		})
+
+	r.BlockEntries()
+
+	e, _ := NewEventRegisterEntry(
+		idempotencyId,
+		"name",
+		"+27...",
+		"ND123",
+		"G...",
+		map[string]int{
+			"cash": 0,
+		},
+		0,
+		true,
+		time.Now())
+
+	// Act.
+	err := r.AddEntry(e)
+
+	// Assert.
+	if err == nil {
+		t.Error("Error should be returned")
+	}
+
+	if len(r.Entries) > 0 {
+		t.Error("No entries should exist")
+	}
+}

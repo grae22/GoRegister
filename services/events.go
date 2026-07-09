@@ -123,7 +123,18 @@ func (s *EventsService) UpdateEvent(newEvent dto.AddEventDto) error {
 	e.Date = newEvent.Date
 	e.Title = newEvent.Title
 	e.OrganiserId = newEvent.OrganiserId
-	e.IsPaymentCompleted = newEvent.IsPaymentCompleted
+
+	if e.AreNewEntriesAllowed != newEvent.AreNewEntriesAllowed {
+		if newEvent.AreNewEntriesAllowed {
+			e.UnblockEntries()
+		} else {
+			e.BlockEntries()
+		}
+	}
+
+	if e.IsPaymentCompleted != newEvent.IsPaymentCompleted {
+		e.TogglePaymentComplete()
+	}
 
 	return nil
 }
@@ -155,7 +166,5 @@ func (s *EventsService) AddRegisterEntry(newEntry dto.AddRegisterEntry) error {
 		return err
 	}
 
-	e.Entries = append(e.Entries, ne)
-
-	return nil
+	return e.AddEntry(ne)
 }

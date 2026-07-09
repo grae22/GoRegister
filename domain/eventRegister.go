@@ -7,13 +7,14 @@ import (
 )
 
 type EventRegister struct {
-	IdempotencyId      string
-	Date               time.Time
-	Title              string
-	OrganiserId        string
-	PaymentOptionsById map[string]PaymentOption
-	Entries            []*EventRegisterEntry
-	IsPaymentCompleted bool
+	IdempotencyId        string
+	Date                 time.Time
+	Title                string
+	OrganiserId          string
+	PaymentOptionsById   map[string]PaymentOption
+	Entries              []*EventRegisterEntry
+	AreNewEntriesAllowed bool
+	IsPaymentCompleted   bool
 }
 
 func NewEventRegister(
@@ -45,29 +46,52 @@ func NewEventRegister(
 	}
 
 	r := EventRegister{
-		IdempotencyId:      idempotencyId,
-		Date:               date,
-		Title:              title,
-		OrganiserId:        organiserId,
-		Entries:            []*EventRegisterEntry{},
-		PaymentOptionsById: paymentOptionsById,
+		IdempotencyId:        idempotencyId,
+		Date:                 date,
+		Title:                title,
+		OrganiserId:          organiserId,
+		Entries:              []*EventRegisterEntry{},
+		AreNewEntriesAllowed: true,
+		PaymentOptionsById:   paymentOptionsById,
 	}
 
 	return &r, nil
 }
 
-func (r *EventRegister) AddEntry(entry *EventRegisterEntry) {
+func (r *EventRegister) AddEntry(entry *EventRegisterEntry) error {
+	if !r.AreNewEntriesAllowed || r.IsPaymentCompleted {
+		return errors.New("New entries not allowed")
+	}
+
 	for _, e := range r.Entries {
 		if e.IdempotencyId == entry.IdempotencyId {
-			return
+			return nil
 		}
 	}
 
 	r.Entries = append(r.Entries, entry)
+
+	return nil
+}
+
+func (r *EventRegister) BlockEntries() {
+	r.AreNewEntriesAllowed = false
+}
+
+func (r *EventRegister) UnblockEntries() {
+	if r.IsPaymentCompleted {
+		return
+	}
+
+	r.AreNewEntriesAllowed = true
 }
 
 func (r *EventRegister) TogglePaymentComplete() {
 	r.IsPaymentCompleted = !r.IsPaymentCompleted
+
+	if r.IsPaymentCompleted {
+		r.AreNewEntriesAllowed = false
+	}
 }
 
 func (r *EventRegister) CalculateAmountDueInC(paymentOptions map[string]PaymentOption) int {
