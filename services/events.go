@@ -5,6 +5,8 @@ import (
 	"goregister/domain"
 	"goregister/dto"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type EventsService struct {
@@ -17,62 +19,84 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 		return nil, errors.New("Nil settings service")
 	}
 
-	r, _ := domain.NewEventRegister(
-		"123",
-		time.Now(),
-		"Test",
-		"graemeb",
-		map[string]domain.PaymentOption{
-			"rhino": {
-				Id:                          "rhino",
-				Name:                        "Rhino card",
-				ValueInC:                    0,
-				DisplayValueInR:             "0",
-				IsEnabledForNewTransactions: true,
-			},
-			"adult": {
-				Id:                          "adult",
-				Name:                        "Adult",
-				ValueInC:                    7000,
-				DisplayValueInR:             "70",
-				IsEnabledForNewTransactions: true,
-			},
-		})
+	date1, _ := time.Parse("2006-01-02 15:04", "2026-07-11 08:00")
+	date2, _ := time.Parse("2006-01-02 15:04", "2026-06-13 08:00")
 
-	e1, _ := domain.NewEventRegisterEntry(
-		"123",
-		"Person 1",
-		"+27...",
-		"ND...",
-		"G...",
+	r1, _ := domain.NewEventRegister(
+		uuid.New().String(),
+		date1,
+		"The Gutter",
+		"neilw",
+		settings.GetPaymentOptions())
+
+	r2, _ := domain.NewEventRegister(
+		uuid.New().String(),
+		date2,
+		"Rumdoodle",
+		"graemeb",
+		settings.GetPaymentOptions())
+
+	e, _ := domain.NewEventRegisterEntry(
+		uuid.NewString(),
+		"Brad Inggs",
+		"+27824659740",
+		"CW79RZZN",
+		"",
 		map[string]int{
-			"rhino": 2,
 			"adult": 1,
 		},
 		7000,
 		true,
-		time.Now())
+		date1)
+	r2.AddEntry(e)
 
-	e2, _ := domain.NewEventRegisterEntry(
-		"456",
-		"Person 2",
-		"+27...",
-		"NP...",
-		"G...",
+	e, _ = domain.NewEventRegisterEntry(
+		uuid.NewString(),
+		"Warwick Hastie",
+		"+27761983282",
+		"BR27CXZN",
+		"G567241",
 		map[string]int{
 			"rhino": 1,
+		},
+		0,
+		true,
+		date1)
+	r2.AddEntry(e)
+
+	e, _ = domain.NewEventRegisterEntry(
+		uuid.NewString(),
+		"Rory Nielson",
+		"+27827874152",
+		"CB94MJZN",
+		"",
+		map[string]int{
 			"adult": 2,
 			"child": 1,
 		},
 		17500,
 		true,
-		time.Now())
+		date1)
+	r2.AddEntry(e)
 
-	r.AddEntry(e1)
-	r.AddEntry(e2)
+	e, _ = domain.NewEventRegisterEntry(
+		uuid.NewString(),
+		"Graeme Bruschi",
+		"+27723955929",
+		"CV96MYZN",
+		"G556769",
+		map[string]int{
+			"rhino": 1,
+		},
+		0,
+		true,
+		date1)
+	r2.AddEntry(e)
+
+	r2.TogglePaymentComplete()
 
 	return &EventsService{
-			events: []*domain.EventRegister{r},
+			events: []*domain.EventRegister{r1, r2},
 		},
 		nil
 }

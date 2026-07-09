@@ -6,12 +6,15 @@
 {{end}}
 <p>
     Date & Time: <b>{{.Event.Date.Format "2006-01-02 15h04"}}</b><br />
-    Organiser: <b>{{index .NameByUserId .Event.OrganiserId}}</b><br /><br />
+    Organiser: <b>{{index .NameByUserId .Event.OrganiserId}}</b><br />
+    {{if .Event.AreNewEntriesAllowed}}
+    <br />
     <input type="hidden" id="link" value="{{.Link}}">
     <button id="copyLink" onclick="copyLink()">Copy Link</button>
+    {{end}}
 </p>
 {{if .Event.AreNewEntriesAllowed}}
-<div style="text-align: right;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">Sign in</a></div>
+<div style="text-align: center; font-size: 1.1em;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">>> Sign the register <<</a></div>
 {{end}}
 <table width="100%" style="padding-right:4px;">
     <th>Name</th>

@@ -3,13 +3,13 @@
 <form action="/api/events" method="POST">
     <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
     <input type="hidden" value="{{.IsUpdate}}" name="isUpdate">
-    <label>Date</label>
+    <label>Date<span style="color:red;">*</span></label>
     <input type="date" name="date" value="{{.Date}}" required><br />
-    <label>Time (24 hour, e.g. 08:00, 13:00, etc.)</label>
+    <label>Time (24 hour, e.g. 8:00, 13:00)<span style="color:red;">*</span></label>
     <input type="text" name="time" value="{{.Time}}" required><br />
-    <label>Title</label>
+    <label>Title<span style="color:red;">*</span></label>
     <input type="text" name="title" value="{{.Title}}" required><br />
-    <label>Organiser</label>
+    <label>Organiser<span style="color:red;">*</span></label>
     <select name="organiserId" id="organiserId" required>
     {{range .Users}}
         <option value="{{.Id}}" {{if eq .Id $.OrganiserId}}selected{{end}}>{{.Name}}</option>

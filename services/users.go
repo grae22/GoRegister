@@ -20,9 +20,12 @@ func (s *UsersService) GetUsers() []domain.User {
 	u1, _ := domain.NewUser("graemeb", "Graeme Bruschi", "666", admin)
 	u2, _ := domain.NewUser("geraldc", "Gerald Camp", "666", admin)
 	u3, _ := domain.NewUser("dylanw", "Dylan Williams", "666", admin)
-	u4, _ := domain.NewUser("waldob", "Waldo Bekker", "777", viewer)
+	u4, _ := domain.NewUser("neilw", "Neil Williamson", "666", admin)
+	u5, _ := domain.NewUser("bradi", "Brad Inggs", "666", admin)
+	u6, _ := domain.NewUser("warwickh", "Warwick Hastie", "666", admin)
+	u7, _ := domain.NewUser("waldob", "Waldo Bekker", "777", viewer)
 
-	return []domain.User{*u1, *u2, *u3, *u4}
+	return []domain.User{*u1, *u2, *u3, *u4, *u5, *u6, *u7}
 }
 
 func (s *UsersService) GetUserById(id string) (domain.User, bool) {

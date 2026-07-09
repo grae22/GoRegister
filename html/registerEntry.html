@@ -4,9 +4,9 @@
     <input type="hidden" value="{{.EventId}}" name="eventId">
     <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
     <input type="hidden" value="{{.IsUpdate}}" name="isUpdate">
-    <label>Name</label>
+    <label>Name<span style="color:red;">*</span></label>
     <input type="text" name="name" value="{{.Entry.PersonName}}" required><br />
-    <label>Phone</label>
+    <label>Phone<span style="color:red;">*</span></label>
     <input type="text" name="contact" value="{{.Entry.PersonContactNumber}}" required><br />
     <label>Vehicle registration</label>
     <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />

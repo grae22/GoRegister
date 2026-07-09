@@ -1,13 +1,13 @@
 {{define "content"}}
 {{$data := .}}
 <h1>Events</h1>
-<div style="text-align: left;">Total owed to KKNR: <b>R {{centsToRandsStr .TotalOwedInC}}</b></div>
-{{if .UserCanAdd}}<div style="text-align: right;"><a href="/addEvent">Add Event</a></div>{{end}}
+{{if .UserCanAdd}}<p style="text-align: left; font-size: 1.1em;"><a href="/addEvent">Add Event</a></p>{{end}}
+<p style="text-align: left;">Total owed to KKNR: <b>R {{centsToRandsStr .TotalOwedInC}}</b></p>
 <table width="100%" style="padding-right:4px;">
     <th>Date & Time</th>
     <th>Title</th>
     <th>Organiser</th>
-    <th style="text-align: center;">Paid (R)</th>
+    <th style="text-align: center;">Due (R)*</th>
     <th></th>
     <th></th>
     {{range .Events}}
@@ -21,4 +21,5 @@
         </tr>
     {{end}}
 </table>
+<div style="text-align: center; font-size: 0.8em;">* Amounts <b>Due (R)</b> - <span style="color: red;">Received by MCSA</span> / <span style="color: green;">Paid to KKNR</span></div>
 {{end}}
