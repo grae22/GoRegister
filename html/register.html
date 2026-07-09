@@ -2,7 +2,7 @@
 {{$data := .}}
 <h1>{{.Event.Title}}</h1>
 {{if .CanEdit}}
-<a href="/events/{{.Event.IdempotencyId}}">Edit</a>
+<p><a href="/events/{{.Event.IdempotencyId}}">Edit Event</a></p>
 {{end}}
 <p>
     Date & Time: <b>{{.Event.Date.Format "2006-01-02 15h04"}}</b><br />
@@ -13,7 +13,7 @@
 {{if .Event.AreNewEntriesAllowed}}
 <div style="text-align: right;"><a href="/addRegisterEntry?eventId={{.Event.IdempotencyId}}">Sign in</a></div>
 {{end}}
-<table>
+<table width="100%" style="padding-right:4px;">
     <th>Name</th>
     <th>Phone</th>
     <th>Vehicle Reg.</th>

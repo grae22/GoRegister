@@ -4,31 +4,49 @@
     <input type="hidden" value="{{.EventId}}" name="eventId">
     <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
     <input type="hidden" value="{{.IsUpdate}}" name="isUpdate">
-    <label>Name</label><br />
+    <label>Name</label>
     <input type="text" name="name" value="{{.Entry.PersonName}}" required><br />
-    <label>Phone</label><br />
+    <label>Phone</label>
     <input type="text" name="contact" value="{{.Entry.PersonContactNumber}}" required><br />
-    <label>Vehicle registration</label><br />
+    <label>Vehicle registration</label>
     <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />
-    <label>Rhino card</label><br />
+    <label>Rhino card</label>
     <input type="text" name="rhinoCard" value="{{.Entry.RhinoCard}}"><br />
-    <div style="border-color: red; border-width: 2px; border-style: dashed;">
+    <div style="border-color: red; background-color: rgb(240,240,240); border-width: 2px; border-style: dashed;">
     <span style="color: red;">Enter the NUMBER of entrants per payment category:</span><br /><br />
     {{range .PaymentOptions}}
-        <label>{{.Name}} ({{.DisplayValueInR}})</label><br />
-        <input type="text" name="payment_{{.Id}}"><br /> 
+        <label>{{.Name}} ({{.DisplayValueInR}})</label>
+        <input type="text" class="payment-method" name="payment_{{.Id}}"><br /> 
     {{end}}
     </div><br />
-    <input type="checkbox" id="conditions" name="conditions" value="yes">
-    <label>I understand and accept the conditions.</label><br /><br />
+    <label>I understand and accept the conditions.</label>
+    <input type="checkbox" id="conditions" name="conditions" value="yes"><br /><br />
     <button id="submit" type="submit" disabled="{{.Entry.IsConditionsAccepted}}">Submit</button>
     <button onclick="history.back()">Cancel</button>
 </form>
 <script langauge="javascript">
+    // Disable submit if conditions not accepted.    
     const conditions = document.getElementById('conditions');
     conditions.addEventListener('change', (e) => {
         const btn = document.getElementById('submit');
         btn.disabled = !e.target.checked
     });
+
+    // At least one payment method must have input.
+    const inputs = document.querySelectorAll('.payment-method');
+
+    function validateGroup() {
+        const anyFilled = Array.from(inputs).some(input => input.value.trim() !== "");
+
+        inputs.forEach(input => {
+            input.required = !anyFilled;
+        });
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', validateGroup);
+    });
+
+    validateGroup();
 </script>
 {{end}}

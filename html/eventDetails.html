@@ -3,22 +3,22 @@
 <form action="/api/events" method="POST">
     <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
     <input type="hidden" value="{{.IsUpdate}}" name="isUpdate">
-    <label>Date (yyyy-mm-dd)</label><br />
+    <label>Date</label>
     <input type="date" name="date" value="{{.Date}}" required><br />
-    <label>Time (24 hour, e.g. 08:00, 13:00, etc.)</label><br />
+    <label>Time (24 hour, e.g. 08:00, 13:00, etc.)</label>
     <input type="text" name="time" value="{{.Time}}" required><br />
-    <label>Title</label><br />
+    <label>Title</label>
     <input type="text" name="title" value="{{.Title}}" required><br />
-    <label>Organiser</label><br />
+    <label>Organiser</label>
     <select name="organiserId" id="organiserId" required>
     {{range .Users}}
         <option value="{{.Id}}" {{if eq .Id $.OrganiserId}}selected{{end}}>{{.Name}}</option>
     {{end}}
     </select><br />
-    <input type="checkbox" name="allowNewEntries" value="allowed" {{if .AreNewEntriesAllowed}}checked{{end}}>
-    <label>Allow guests to sign register</label><br /><br />
-    <input type="checkbox" name="paymentCompleted" value="paid" {{if .IsPaymentCompleted}}checked{{end}}>
-    <label>Payment made to KKNR</label><br /><br />
+    <label>Allow guests to sign register</label>
+    <input type="checkbox" name="allowNewEntries" value="allowed" {{if .AreNewEntriesAllowed}}checked{{end}}><br />
+    <label>Payment made to KKNR</label>
+    <input type="checkbox" name="paymentCompleted" value="paid" {{if .IsPaymentCompleted}}checked{{end}}><br /><br />
     <button type="submit">Submit</button>
     <button onclick="history.back()">Cancel</button>
 </form>

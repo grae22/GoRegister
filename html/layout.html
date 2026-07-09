@@ -2,12 +2,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">-->
     <title>Event Register</title>
 </head>
 <body>
     {{if .Layout.HasTopBar}}
-    <table>
+    <table width="100%">
         <tr>
             <td>
                 {{if .Layout.ShowAllEventsLink}}<a href="/events">All Events</a>{{end}}
