@@ -46,6 +46,7 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 			"adult": 1,
 		},
 		7000,
+		false,
 		true,
 		date1)
 	r2.AddEntry(e)
@@ -60,6 +61,7 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 			"rhino": 1,
 		},
 		0,
+		false,
 		true,
 		date1)
 	r2.AddEntry(e)
@@ -75,6 +77,7 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 			"child": 1,
 		},
 		17500,
+		false,
 		true,
 		date1)
 	r2.AddEntry(e)
@@ -89,6 +92,22 @@ func NewEventsService(settings *SettingsService) (*EventsService, error) {
 			"rhino": 1,
 		},
 		0,
+		false,
+		true,
+		date1)
+	r2.AddEntry(e)
+
+	e, _ = domain.NewEventRegisterEntry(
+		uuid.NewString(),
+		"Donovan",
+		"+27721234567",
+		"AB12CDZN",
+		"",
+		map[string]int{
+			"adult": 2,
+		},
+		14000,
+		true,
 		true,
 		date1)
 	r2.AddEntry(e)
@@ -187,6 +206,7 @@ func (s *EventsService) AddRegisterEntry(newEntry dto.AddRegisterEntry) error {
 		newEntry.RhinoCard,
 		newEntry.EntrantCountByPaymentType,
 		newEntry.AmountDueInC,
+		newEntry.WasPaidToReserve,
 		newEntry.IsConditionsAccepted,
 		time.Now())
 

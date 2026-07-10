@@ -171,6 +171,7 @@ func TestAddEntry_WhenDuplicateIdempotencyReceived_ThenEntryIsNotAdded(t *testin
 		},
 		0,
 		true,
+		true,
 		time.Now())
 
 	r.AddEntry(e)
@@ -209,6 +210,7 @@ func TestAddEntry_WhenNewEntriesNotAllowed_ThenEntryIsNotAdded(t *testing.T) {
 			"cash": 0,
 		},
 		0,
+		true,
 		true,
 		time.Now())
 

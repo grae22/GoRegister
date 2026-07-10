@@ -14,6 +14,7 @@ type EventRegisterEntry struct {
 	RhinoCard                   string
 	EntrantCountByPaymentTypeId map[string]int
 	AmountDueInC                int
+	WasPaidToReserve            bool
 	IsConditionsAccepted        bool
 	Timestamp                   time.Time
 }
@@ -26,6 +27,7 @@ func NewEventRegisterEntry(
 	rhinoCard string,
 	entrantCountByPaymentTypeId map[string]int,
 	amountDueInC int,
+	wasPaidToReserve bool,
 	isConditionsAccepted bool,
 	timestamp time.Time,
 ) (*EventRegisterEntry, error) {
@@ -62,6 +64,7 @@ func NewEventRegisterEntry(
 		RhinoCard:                   rhinoCard,
 		EntrantCountByPaymentTypeId: entrantCountByPaymentTypeId,
 		AmountDueInC:                amountDueInC,
+		WasPaidToReserve:            wasPaidToReserve,
 		IsConditionsAccepted:        isConditionsAccepted,
 		Timestamp:                   timestamp,
 	}

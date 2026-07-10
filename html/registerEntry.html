@@ -1,5 +1,6 @@
 {{define "content"}}
 <h1>Your details</h1>
+<h3 style="color:red;">DO NOT SIGN THIS REGISTER IF YOU HAVE A PERMIT AND SIGNED THE REGISTER AT THE MAIN ENTRANCE</h3>
 <form action="/api/registers" method="POST">
     <input type="hidden" value="{{.EventId}}" name="eventId">
     <input type="hidden" value="{{.IdempotencyId}}" name="idempotencyId">
@@ -12,24 +13,33 @@
     <input type="text" name="vehicleReg" value="{{.Entry.VehicleRegistration}}"><br />
     <label>Rhino card</label>
     <input type="text" name="rhinoCard" value="{{.Entry.RhinoCard}}"><br />
-    <div style="border-color: red; background-color: rgb(240,240,240); border-width: 2px; border-style: dashed;">
-    <span style="color: red;">Enter the NUMBER of entrants per payment category:</span><br /><br />
-    {{range .PaymentOptions}}
-        <label>{{.Name}} ({{.DisplayValueInR}})</label>
-        <input type="text" class="payment-method" name="payment_{{.Id}}"><br /> 
-    {{end}}
-    </div><br />
-    <label>I understand and accept the conditions.</label>
+    <label><span style="color:red;">NUMBER</span> of entrants</label>
+    <div style="border-color: red; background-color: rgb(240,240,240); border-width: 2px; border-style: dashed; padding: 8px; display: inline-block;">
+        {{range .PaymentOptions}}
+            <label>{{.Name}} ({{.DisplayValueInR}})</label>
+            <input type="text" class="payment-method" name="payment_{{.Id}}"><br /> 
+        {{end}}
+        <label>I paid at the main entrance</label>
+        <input type="checkbox" name="paidReserve" value="yes">
+    </div><br /><br />
+    <label>I do not have a permit and did not sign the register at the main entrance</label>
+    <input type="checkbox" id="mainEntrance" name="mainEntrance"><br /><br />
+    <label>I understand and accept the conditions</label>
     <input type="checkbox" id="conditions" name="conditions" value="yes"><br /><br />
     <button id="submit" type="submit" disabled="{{.Entry.IsConditionsAccepted}}">Submit</button>
     <button onclick="history.back()">Cancel</button>
 </form>
 <script langauge="javascript">
     // Disable submit if conditions not accepted.    
+    const mainEntrance = document.getElementById('mainEntrance');
     const conditions = document.getElementById('conditions');
     conditions.addEventListener('change', (e) => {
         const btn = document.getElementById('submit');
-        btn.disabled = !e.target.checked
+        btn.disabled = !mainEntrance.checked || !conditions.checked
+    });
+    mainEntrance.addEventListener('change', (e) => {
+        const btn = document.getElementById('submit');
+        btn.disabled = !mainEntrance.checked || !conditions.checked
     });
 
     // At least one payment method must have input.

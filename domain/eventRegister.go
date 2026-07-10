@@ -98,14 +98,7 @@ func (r *EventRegister) CalculateAmountDueInC(paymentOptions map[string]PaymentO
 	totalInC := 0
 
 	for _, e := range r.Entries {
-		for id, count := range e.EntrantCountByPaymentTypeId {
-			opt, ok := paymentOptions[id]
-			if !ok {
-				continue
-			}
-
-			totalInC += opt.ValueInC * count
-		}
+		totalInC += e.AmountDueInC
 	}
 
 	return totalInC

@@ -20,5 +20,6 @@ type AddRegisterEntry struct {
 	RhinoCard                 string
 	EntrantCountByPaymentType map[string]int
 	AmountDueInC              int
+	WasPaidToReserve          bool
 	IsConditionsAccepted      bool
 }

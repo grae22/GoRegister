@@ -65,15 +65,22 @@ func handleAddRegisterEntry(
 		VehicleRegistration:       r.FormValue("vehicleReg"),
 		RhinoCard:                 r.FormValue("rhinoCard"),
 		EntrantCountByPaymentType: getEntrantCounts(r),
+		WasPaidToReserve:          r.FormValue("paidReserve") == "yes",
 		IsConditionsAccepted:      r.FormValue("conditions") == "yes",
 	}
 
-	amountDueInC, err := calculateAmountDueInC(
-		api.settings.GetPaymentOptions(),
-		e.EntrantCountByPaymentType)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	var err error
+
+	amountDueInC := 0
+
+	if !e.WasPaidToReserve {
+		amountDueInC, err = calculateAmountDueInC(
+			api.settings.GetPaymentOptions(),
+			e.EntrantCountByPaymentType)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	e.AmountDueInC = amountDueInC

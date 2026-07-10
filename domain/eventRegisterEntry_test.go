@@ -28,6 +28,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
+		true,
 		isConditionsAccepted,
 		time.Now())
 
@@ -39,6 +40,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
+		true,
 		isConditionsAccepted,
 		time.Now())
 
@@ -50,6 +52,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
+		true,
 		isConditionsAccepted,
 		time.Now())
 
@@ -61,6 +64,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
+		true,
 		isConditionsAccepted,
 		time.Now())
 
@@ -72,6 +76,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		rhinoCard,
 		nil,
 		amountPaidInC,
+		true,
 		isConditionsAccepted,
 		time.Now())
 
@@ -83,6 +88,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		rhinoCard,
 		entrantCountByType,
 		-1,
+		true,
 		isConditionsAccepted,
 		time.Now())
 
@@ -94,6 +100,7 @@ func TestNewEventRegisterEntry_WhenRequiredFieldBlank_ThenErrorReturned(t *testi
 		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
+		true,
 		false,
 		time.Now())
 
@@ -150,6 +157,7 @@ func TestNewEventRegisterEntry_WhenParamsOk_ThenObjectReturned(t *testing.T) {
 		rhinoCard,
 		entrantCountByType,
 		amountPaidInC,
+		true,
 		isConditionsAccepted,
 		time.Now())
 
